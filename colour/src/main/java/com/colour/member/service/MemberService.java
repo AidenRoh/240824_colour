@@ -1,18 +1,17 @@
 package com.colour.member.service;
 
 import com.colour.member.dto.MemberRegisterDto;
-import com.colour.member.repository.MemberRepository;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
+import com.colour.member.dto.MemberSearchCond;
+import com.colour.member.dto.MemberUpdateDto;
+import com.colour.member.entity.Member;
 
-@Service
-@Transactional
-public class MemberService {
+import java.util.List;
 
-    MemberRepository memberRepository;
+public interface MemberService {
 
-    public MemberService(MemberRepository memberRepository) {
-        this.memberRepository = memberRepository;
-    }
-
+    Member registerMember(MemberRegisterDto dto);
+    void updateMember(Long memberId, MemberUpdateDto dto);
+    Member findMemberById(Long memberId);
+    List<Member> findAllMembersByCond(MemberSearchCond cond);
+    void deleteMember(Long memberId);
 }
