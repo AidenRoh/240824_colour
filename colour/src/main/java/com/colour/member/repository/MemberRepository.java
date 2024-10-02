@@ -12,4 +12,5 @@ public interface MemberRepository {
     Member findAll();
     void update(Long memberId, MemberUpdateDto updateDto);
     void delete(Long memberId);
+    boolean existsByEmail(String email);
 }

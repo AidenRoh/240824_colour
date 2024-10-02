@@ -98,6 +98,14 @@ public class MemberRepositoryJDBC implements MemberRepository {
         template.update(sql, param);
     }
 
+    @Override
+    public boolean existsByEmail(String email) {
+        String sql = "SELECT count(*) FROM member WHERE email = :email";
+        Map<String, Object> param = Map.of("email", email);
+        Long count = template.queryForObject(sql, param, Long.class);
+        return count > 0;
+    }
+
     private RowMapper<Member> memberRowMapper() {
         return BeanPropertyRowMapper.newInstance(Member.class);
 //        return ((rs, rowNum) -> {

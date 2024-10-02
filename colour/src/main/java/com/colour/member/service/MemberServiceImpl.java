@@ -21,12 +21,7 @@ public class MemberServiceImpl implements MemberService {
     }
 
     @Override
-    public Member registerMember(MemberRegisterDto dto) {
-        Member member = new Member();
-        member.setUsername(dto.getUsername());
-        member.setPassword(dto.getPassword());
-        member.setEmail(dto.getEmail());
-
+    public Member registerMember(Member member) {
         return memberRepository.create(member);
     }
 
@@ -48,5 +43,10 @@ public class MemberServiceImpl implements MemberService {
     @Override
     public void deleteMember(Long memberId) {
         memberRepository.delete(memberId);
+    }
+
+    @Override
+    public boolean isMemberExist(String email) {
+        return memberRepository.existsByEmail(email);
     }
 }
