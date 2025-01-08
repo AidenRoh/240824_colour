@@ -70,7 +70,6 @@ public class MemberController {
             Member member = new Member(session.getUsername(), session.getPassword(), session.getEmail());
             memberService.registerMember(member);
         }
-
 //        emailSessionService.deleteSession(email);
         return "ok";
     }
@@ -88,9 +87,11 @@ public class MemberController {
         return "get-members";
     }
 
-    @DeleteMapping("/delete-member")
-    public String deleteMember() {
-        System.out.println("called");
+    @DeleteMapping("/delete-member/{member_id}")
+    public String deleteMember(@PathVariable("member_id") Long member_id) {
+        if ( memberService.findMemberById(member_id) != null) {
+            memberService.deleteMember(member_id);
+        }
         return "delete-form";
     }
 }
