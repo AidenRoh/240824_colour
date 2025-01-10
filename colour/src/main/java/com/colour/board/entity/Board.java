@@ -8,6 +8,8 @@ import java.util.Date;
 @Data
 public class Board {
 
+    private static final long DEFAULT_LIKE = 0;
+
     private Long boardId;
     private String writer;
     private String title;
@@ -17,13 +19,15 @@ public class Board {
     private Timestamp updatedAt;
     private Timestamp deletedAt;
 
-    public Board(String writer, String title, String content, Long userLike) {
+    public Board(String writer, String title, String content) {
         this.writer = writer;
         this.title = title;
         this.content = content;
-        this.userLike = userLike;
+        this.userLike = DEFAULT_LIKE;
         this.createdAt = new Timestamp(new Date().getTime());
     }
+
+
 
     public Board() {
     }
