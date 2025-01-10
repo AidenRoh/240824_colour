@@ -1,6 +1,6 @@
 package com.colour.board.repository;
 
-import com.colour.board.dto.BoardCond;
+import com.colour.board.dto.BoardSearchCond;
 import com.colour.board.dto.BoardUpdateDto;
 import com.colour.board.entity.Board;
 import org.springframework.dao.EmptyResultDataAccessException;
@@ -48,7 +48,7 @@ public class BoardJdbcRepository implements BoardRepository {
 
     @Override
     public Optional<Board> findById(Long boardId) {
-        String sql = "SELECT board_id, writer, title, content, userLike, createdAt, updatedAt, deletedAt FROM board WHERE board_id = :id";
+        String sql = "SELECT board_id, writer, title, content, user_like, created_at, updated_at, deleted_at FROM board WHERE board_id = :id";
         try {
             Map<String, Object> param = Map.of("id", boardId);
             Board board = template.queryForObject(sql, param, boardRowMapper());
@@ -60,7 +60,7 @@ public class BoardJdbcRepository implements BoardRepository {
     }
 
     @Override
-    public List<Board> findAll(BoardCond boardCond) {
+    public List<Board> findAll(BoardSearchCond boardCond) {
         return List.of();
     }
 
@@ -75,7 +75,7 @@ public class BoardJdbcRepository implements BoardRepository {
             }
             sql += "content=:content";
         }
-        sql += ", updatedAt=:updatedAt WHERE board_id=:id";
+        sql += ", updated_at=:updatedAt WHERE board_id=:id";
 
         SqlParameterSource param = new MapSqlParameterSource()
                 .addValue("id", boardId)
@@ -87,7 +87,7 @@ public class BoardJdbcRepository implements BoardRepository {
 
     @Override
     public void delete(Long boardId) {
-        String sql = "UPDATE board SET deletedAt=:deletedAt WHERE board_id=:id";
+        String sql = "UPDATE board SET deleted_at=:deletedAt WHERE board_id=:id";
         SqlParameterSource param = new MapSqlParameterSource()
                 .addValue("id", boardId)
                 .addValue("deletedAt", new Timestamp(new Date().getTime()));

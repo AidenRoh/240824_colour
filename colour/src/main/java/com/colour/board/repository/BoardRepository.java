@@ -1,6 +1,6 @@
 package com.colour.board.repository;
 
-import com.colour.board.dto.BoardCond;
+import com.colour.board.dto.BoardSearchCond;
 import com.colour.board.dto.BoardUpdateDto;
 import com.colour.board.entity.Board;
 
@@ -11,7 +11,7 @@ public interface BoardRepository {
 
     Board create(Board board);
     Optional<Board> findById(Long boardId);
-    List<Board> findAll(BoardCond boardCond);
+    List<Board> findAll(BoardSearchCond boardCond);
     void update(Long boardId, BoardUpdateDto updateDto);
     void delete(Long boardId);
 }
