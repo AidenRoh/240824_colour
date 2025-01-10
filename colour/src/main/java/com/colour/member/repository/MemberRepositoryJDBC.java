@@ -1,5 +1,6 @@
 package com.colour.member.repository;
 
+import com.colour.member.dto.MemberSearchCond;
 import com.colour.member.dto.MemberUpdateDto;
 import com.colour.member.entity.Member;
 import org.springframework.dao.EmptyResultDataAccessException;
@@ -95,7 +96,7 @@ public class MemberRepositoryJDBC implements MemberRepository {
     }
 
     @Override
-    public List<Member> findAll() {
+    public List<Member> findAll(MemberSearchCond cond) {
         return null;
     }
 
