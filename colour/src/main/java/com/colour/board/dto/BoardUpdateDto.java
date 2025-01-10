@@ -9,5 +9,4 @@ public class BoardUpdateDto {
 
     private String updatedTitle;
     private String updatedContent;
-
 }
