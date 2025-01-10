@@ -1,6 +1,5 @@
 package com.colour.member.service;
 
-import com.colour.member.dto.MemberRegisterDto;
 import com.colour.member.dto.MemberSearchCond;
 import com.colour.member.dto.MemberUpdateDto;
 import com.colour.member.entity.Member;
@@ -14,7 +13,7 @@ import java.util.List;
 @Transactional
 public class MemberServiceImpl implements MemberService {
 
-    MemberRepository memberRepository;
+    private final MemberRepository memberRepository;
 
     public MemberServiceImpl(MemberRepository memberRepository) {
         this.memberRepository = memberRepository;
