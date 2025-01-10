@@ -13,9 +13,17 @@ import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.stereotype.Repository;
 
 import javax.sql.DataSource;
+import java.util.List;
 import java.util.Map;
 import java.util.Optional;
-
+/*
+* NamedParameterJdbcTemplate
+* SqlParameterSource
+* - BeanPropertySqlParameterSource
+* - MapSqlParameterSource
+* - Map
+* - BeanPropertyRowMapper
+*/
 @Repository
 public class MemberRepositoryJDBC implements MemberRepository {
 
@@ -87,7 +95,7 @@ public class MemberRepositoryJDBC implements MemberRepository {
     }
 
     @Override
-    public Member findAll() {
+    public List<Member> findAll() {
         return null;
     }
 

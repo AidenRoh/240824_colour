@@ -1,6 +1,5 @@
 package com.colour.member.entity;
 
-import com.colour.member.dto.MemberRegisterDto;
 import lombok.Data;
 
 @Data
