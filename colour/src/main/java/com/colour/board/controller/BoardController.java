@@ -35,7 +35,7 @@ public class BoardController {
         return "updated-board";
     }
 
-    @PostMapping("update-board/{member_id}/{board_id}")
+    @PatchMapping("update-board/{member_id}/{board_id}")
     public String updateBoard(@RequestBody BoardUpdateDto dto,
                               @PathVariable Long member_id, @PathVariable Long board_id) {
         if (doesWriterRequest(member_id, board_id)) {

@@ -74,8 +74,13 @@ public class MemberController {
         return "ok";
     }
 
-    @PostMapping("/edit-member/{member_id}")
-    public String editMember(@ModelAttribute("MemberUpdateDto") MemberUpdateDto dto,
+    @GetMapping
+    public String updateMember() {
+        return "update-member";
+    }
+
+    @PatchMapping("/update-member/{member_id}")
+    public String updateMember(@ModelAttribute("MemberUpdateDto") MemberUpdateDto dto,
                              @PathVariable("member_id") Long member_id) {
         memberService.updateMember(member_id, dto);
         return "ok";
