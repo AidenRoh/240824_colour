@@ -1,7 +1,7 @@
 package com.colour.member.config;
 
 import com.colour.member.repository.MemberRepository;
-import com.colour.member.repository.MemberRepositoryJDBC;
+import com.colour.member.repository.MemberJdbcRepository;
 import com.colour.member.service.MemberService;
 import com.colour.member.service.MemberServiceImpl;
 import lombok.RequiredArgsConstructor;
@@ -23,6 +23,6 @@ public class MemberConfig {
 
     @Bean
     public MemberRepository memberRepository() {
-        return new MemberRepositoryJDBC(dataSource);
+        return new MemberJdbcRepository(dataSource);
     }
 }

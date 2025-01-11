@@ -26,12 +26,12 @@ import java.util.Optional;
 * - BeanPropertyRowMapper
 */
 @Repository
-public class MemberRepositoryJDBC implements MemberRepository {
+public class MemberJdbcRepository implements MemberRepository {
 
     private final NamedParameterJdbcTemplate template;
     private final SimpleJdbcInsert insert;
 
-    public MemberRepositoryJDBC(DataSource dataSource) {
+    public MemberJdbcRepository(DataSource dataSource) {
         this.template = new NamedParameterJdbcTemplate(dataSource);
         this.insert = new SimpleJdbcInsert(dataSource)
                 .withTableName("member")

@@ -13,25 +13,25 @@ import java.util.List;
 @Transactional
 public class MemberServiceImpl implements MemberService {
 
-    private final MemberRepository memberRepository;
+    private final MemberRepository repository;
 
     public MemberServiceImpl(MemberRepository memberRepository) {
-        this.memberRepository = memberRepository;
+        this.repository = memberRepository;
     }
 
     @Override
     public Member registerMember(Member member) {
-        return memberRepository.create(member);
+        return repository.create(member);
     }
 
     @Override
     public void updateMember(Long memberId, MemberUpdateDto dto) {
-        memberRepository.update(memberId, dto);
+        repository.update(memberId, dto);
     }
 
     @Override
     public Member findMemberById(Long memberId) {
-        return memberRepository.findById(memberId).orElse(null);
+        return repository.findById(memberId).orElse(null);
     }
 
     @Override
@@ -41,11 +41,11 @@ public class MemberServiceImpl implements MemberService {
 
     @Override
     public void deleteMember(Long memberId) {
-        memberRepository.delete(memberId);
+        repository.delete(memberId);
     }
 
     @Override
     public boolean isMemberExist(String email) {
-        return memberRepository.existsByEmail(email);
+        return repository.existsByEmail(email);
     }
 }

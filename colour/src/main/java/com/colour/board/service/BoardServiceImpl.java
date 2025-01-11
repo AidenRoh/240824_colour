@@ -13,25 +13,25 @@ import java.util.List;
 @Transactional
 public class BoardServiceImpl implements BoardService {
 
-    private final BoardRepository boardRepository;
+    private final BoardRepository repository;
 
     public BoardServiceImpl(BoardRepository boardRepository) {
-        this.boardRepository = boardRepository;
+        this.repository = boardRepository;
     }
 
     @Override
     public Board createBoard(Board board) {
-        return boardRepository.create(board);
+        return repository.create(board);
     }
 
     @Override
     public void updateBoard(Long boardId, BoardUpdateDto dto) {
-        boardRepository.update(boardId, dto);
+        repository.update(boardId, dto);
     }
 
     @Override
     public Board findBoardById(Long boardId) {
-        return boardRepository.findById(boardId).orElse(null);
+        return repository.findById(boardId).orElse(null);
     }
 
     @Override
@@ -41,6 +41,6 @@ public class BoardServiceImpl implements BoardService {
 
     @Override
     public void deleteBoard(Long boardId) {
-        boardRepository.delete(boardId);
+        repository.delete(boardId);
     }
 }
