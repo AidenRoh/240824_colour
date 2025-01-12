@@ -3,10 +3,12 @@ package com.colour.member.repository;
 import com.colour.member.dto.MemberSearchCond;
 import com.colour.member.dto.MemberUpdateDto;
 import com.colour.member.entity.Member;
+import org.springframework.stereotype.Repository;
 
 import java.util.List;
 import java.util.Optional;
 
+@Repository
 public interface MemberRepository {
 
     Member create(Member member);

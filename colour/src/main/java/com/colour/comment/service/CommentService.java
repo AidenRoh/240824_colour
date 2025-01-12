@@ -2,12 +2,15 @@ package com.colour.comment.service;
 
 import com.colour.comment.dto.ResponseSearchCond;
 import com.colour.comment.dto.ResponseUpdateDto;
-import com.colour.comment.entity.Comment;
 import com.colour.comment.entity.Response;
 import com.colour.comment.repository.ResponseRepository;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
+@Service
+@Transactional
 public class CommentService implements ResponseService {
 
     private final ResponseRepository repository;

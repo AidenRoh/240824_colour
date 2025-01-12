@@ -1,7 +1,9 @@
 package com.colour.session.repository;
 
 import com.colour.session.entity.EmailSession;
+import org.springframework.stereotype.Repository;
 
+@Repository
 public interface EmailSessionRepository {
 
     void createSession(EmailSession session);
