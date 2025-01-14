@@ -1,4 +1,4 @@
-package com.colour.board.entity;
+package com.colour.board.post.entity;
 
 import lombok.Data;
 
@@ -6,29 +6,29 @@ import java.sql.Timestamp;
 import java.util.Date;
 
 @Data
-public class Board {
+public class Post {
 
     private static final long DEFAULT_LIKE = 0;
 
-    private Long boardId;
+    private Long postId;
     private String writer;
     private String title;
     private String content;
-    private Long userLike;
+    private String colorPalette;
+    private Long userLikes;
     private Timestamp createdAt;
     private Timestamp updatedAt;
     private Timestamp deletedAt;
 
-    public Board(String writer, String title, String content) {
+    public Post(String writer, String title, String content, String colorPalette) {
         this.writer = writer;
         this.title = title;
         this.content = content;
-        this.userLike = DEFAULT_LIKE;
+        this.colorPalette = colorPalette;
+        this.userLikes = DEFAULT_LIKE;
         this.createdAt = new Timestamp(new Date().getTime());
     }
 
-
-
-    public Board() {
+    public Post() {
     }
 }

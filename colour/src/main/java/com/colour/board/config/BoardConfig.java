@@ -1,7 +1,7 @@
 package com.colour.board.config;
 
+import com.colour.board.hashtag.repository.HashtagJdbcRepository;
 import com.colour.board.hashtag.repository.HashtagRepository;
-import com.colour.board.hashtag.repository.TagJdbcRepository;
 import com.colour.board.hashtag.service.HashtagService;
 import com.colour.board.hashtag.service.HashtagServiceImpl;
 import com.colour.board.post.repository.PostJdbcRepository;
@@ -41,7 +41,7 @@ public class BoardConfig {
 
     @Bean
     public HashtagRepository hashtagRepository() {
-        return new TagJdbcRepository(dataSource);
+        return new HashtagJdbcRepository(dataSource);
     }
 
     @Bean
