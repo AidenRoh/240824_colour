@@ -8,4 +8,9 @@ import lombok.Setter;
 public class ColorVo{
 
     private String color;
+
+    @Override
+    public String toString() {
+        return color;
+    }
 }
