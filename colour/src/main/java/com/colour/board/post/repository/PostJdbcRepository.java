@@ -1,7 +1,6 @@
 package com.colour.board.post.repository;
 
 import com.colour.board.post.dto.PostDto;
-import com.colour.board.post.dto.PostSearchCond;
 import com.colour.board.post.entity.Post;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
@@ -14,10 +13,8 @@ import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 
 import javax.sql.DataSource;
 import java.sql.Timestamp;
-import java.util.Date;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
+import java.util.*;
+
 /*
  * NamedParameterJdbcTemplate
  * SqlParameterSource
@@ -61,42 +58,50 @@ public class PostJdbcRepository implements PostRepository {
     }
 
     @Override
-    public List<Post> findAll(PostSearchCond postCond) {
-        String sql = "SELECT * FROM post WHERE LOCATE(content=:content, post.content)";
+    public List<Post> findByTitle(String title) {
+        String sql = "SELECT * FROM post WHERE LOCATE(title=:title, post.title)";
         SqlParameterSource param = new MapSqlParameterSource()
-                .addValue("content", postCond.getKeyword());
+                .addValue("title", title);
         return template.query(sql, param, postRowMapper());
     }
 
     @Override
-    public void update(Long postId, PostDto updateDto) {
-        String sql = "UPDATE post SET ";
+    public void update(Long postId, PostDto dto) {
+        Map<String, Object> param = new HashMap<>();
         boolean andFlag = false;
-        if (updateDto.getTitle() != null){
+        String sql = "UPDATE post SET ";
+
+        if (dto.getTitle() != null){
             sql += "title=:title";
+            param.put("title", dto.getTitle());
             andFlag = true;
         }
-        if (updateDto.getContent() != null) {
+
+        if (dto.getContent() != null) {
             if (andFlag) {
                 sql += ", ";
             }
             sql += "content=:content";
+            param.put("content", dto.getContent());
             andFlag = true;
         }
-        if (!updateDto.getColors().isEmpty()) {
+
+        if (dto.getColors() != null) {
             if (andFlag) {
                 sql += ", ";
             }
-            sql += "color_palette=:color_palette";
+            sql += "color_palette=:colorPalette";
+            param.put("colorPalette", dto.getColors().toString());
+            andFlag = true;
         }
-        sql += ", updated_at=:updatedAt WHERE post_id=:id";
 
-        SqlParameterSource param = new MapSqlParameterSource()
-                .addValue("id", postId)
-                .addValue("title", updateDto.getTitle())
-                .addValue("content", updateDto.getContent())
-                .addValue("color_palette", updateDto.getColors().toString())
-                .addValue("updatedAt", new Timestamp(new Date().getTime()));
+        if (andFlag) {
+            sql += ", ";
+        }
+
+        sql += "updated_at=:updatedAt WHERE post_id=:id";
+        param.put("id", postId);
+        param.put("updatedAt", new Timestamp(new Date().getTime()));
         template.update(sql, param);
     }
 

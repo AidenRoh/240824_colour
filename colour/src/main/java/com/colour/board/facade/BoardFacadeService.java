@@ -4,13 +4,11 @@ import com.colour.board.hashtag.dto.HashtagVo;
 import com.colour.board.hashtag.entity.Hashtag;
 import com.colour.board.hashtag.service.HashtagService;
 import com.colour.board.post.dto.PostDto;
-import com.colour.board.post.dto.PostSearchCond;
 import com.colour.board.post.entity.Post;
 import com.colour.board.post.service.PostService;
 import com.colour.board.tagtopost.dto.TagPostDto;
 import com.colour.board.tagtopost.entity.TagPost;
 import com.colour.board.tagtopost.service.TagPostService;
-import com.colour.member.entity.Member;
 import com.colour.member.service.MemberService;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -72,7 +70,7 @@ public class BoardFacadeService {
     public List<Hashtag> getHashtags(List<TagPost> tagPosts) {
         List<Hashtag> container =new ArrayList<>();
         for (TagPost tagPost : tagPosts) {
-            Long tagId = tagPost.getTagId();
+            Long tagId = tagPost.getHashtagId();
             container.add(hashtagService.findById(tagId));
         }
         return container;
@@ -96,8 +94,8 @@ public class BoardFacadeService {
         return tagPostService.findByCond(dto);
     }
 
-    public List<Post> findByContent(PostSearchCond cond) {
-        return postService.findPostByCond(cond);
+    public List<Post> findByTitle(String title) {
+        return postService.findPostByTitle(title);
     }
 
     //internal logic
@@ -111,7 +109,7 @@ public class BoardFacadeService {
     private void abandonHashtag(Long postId) {
         List<TagPost> tagPostList = findByPostId(postId);
         for (TagPost tagPost : tagPostList) {
-            hashtagService.delete(tagPost.getTagId());
+            hashtagService.delete(tagPost.getHashtagId());
             tagPostService.delete(tagPost.getTagPostId());
         }
     }
@@ -119,7 +117,7 @@ public class BoardFacadeService {
     private List<Hashtag> createHashtag(List<HashtagVo> tags) {
         List<Hashtag> tagList = new ArrayList<>();
         for (HashtagVo tag : tags) {
-            Hashtag savedTag = hashtagService.save(new Hashtag(tag.getHashTag()));
+            Hashtag savedTag = hashtagService.save(new Hashtag(tag.getHashtag()));
             tagList.add(savedTag);
         }
         return tagList;

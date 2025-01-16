@@ -1,7 +1,6 @@
 package com.colour.board.post.repository;
 
 import com.colour.board.post.dto.PostDto;
-import com.colour.board.post.dto.PostSearchCond;
 import com.colour.board.post.entity.Post;
 import org.springframework.stereotype.Repository;
 
@@ -13,7 +12,7 @@ public interface PostRepository {
 
     Post save(Post board);
     Optional<Post> findById(Long postId);
-    List<Post> findAll(PostSearchCond boardCond);
+    List<Post> findByTitle(String title);
     void update(Long boardId, PostDto dto);
     void delete(Long boardId);
 }
