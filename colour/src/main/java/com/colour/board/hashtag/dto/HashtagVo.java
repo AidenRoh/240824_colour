@@ -6,5 +6,5 @@ import lombok.Setter;
 @Getter
 @Setter
 public class HashtagVo {
-    private String hashTag;
+    private String hashtag;
 }
