@@ -21,7 +21,9 @@ public class TagPostJdbcRepository  implements TagPostRepository {
 
     public TagPostJdbcRepository(DataSource dataSource) {
         this.template = new NamedParameterJdbcTemplate(dataSource);
-        this.insert = new SimpleJdbcInsert(dataSource);
+        this.insert = new SimpleJdbcInsert(dataSource)
+                .withTableName("tag_post")
+                .usingGeneratedKeyColumns("tag_post_id");
     }
 
     @Override

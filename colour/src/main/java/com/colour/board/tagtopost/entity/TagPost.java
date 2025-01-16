@@ -6,12 +6,12 @@ import lombok.Data;
 public class TagPost {
 
     private Long tagPostId;
-    private Long tagId;
+    private Long hashtagId;
     private Long postId;
     private Long memberId;
 
-    public TagPost(Long tagId, Long postId, Long memberId) {
-        this.tagId = tagId;
+    public TagPost(Long hashtagId, Long postId, Long memberId) {
+        this.hashtagId = hashtagId;
         this.postId = postId;
         this.memberId = memberId;
     }
