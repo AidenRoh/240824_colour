@@ -22,7 +22,9 @@ public class HashtagJdbcRepository implements HashtagRepository {
 
     public HashtagJdbcRepository(DataSource dataSource) {
         this.template = new NamedParameterJdbcTemplate(dataSource);
-        this.insert = new SimpleJdbcInsert(dataSource);
+        this.insert = new SimpleJdbcInsert(dataSource)
+                .withTableName("hashtag")
+                .usingGeneratedKeyColumns("hashtag_id");
     }
 
     @Override
@@ -34,24 +36,24 @@ public class HashtagJdbcRepository implements HashtagRepository {
     }
 
     @Override
-    public void tagUp(Long tagId) {
+    public void tagUp(Long hashtagId) {
         String sql = "UPDATE hashtag SET tag_frequency= hashtag.tag_frequency + 1 WHERE hashtag_id=:hashtagId";
-        Map<String, Object> param = Map.of("hashtagId", tagId);
+        Map<String, Object> param = Map.of("hashtagId", hashtagId);
         template.update(sql, param);
     }
 
     @Override
-    public void tagDown(Long tagId) {
+    public void tagDown(Long hashtagId) {
         String sql = "UPDATE hashtag SET tag_frequency= hashtag.tag_frequency - 1 WHERE hashtag_id=:hashtagId";
-        Map<String, Object> param = Map.of("hashtagId", tagId);
+        Map<String, Object> param = Map.of("hashtagId", hashtagId);
         template.update(sql, param);
     }
 
     @Override
-    public Optional<Hashtag> findById(Long tagId) {
+    public Optional<Hashtag> findById(Long hashtagId) {
         String sql = "SELECT * FROM hashtag WHERE hashtag_id=:hashtagId";
         try {
-           Map<String, Object> param = Map.of("hashtagId", tagId);
+           Map<String, Object> param = Map.of("hashtagId", hashtagId);
            Hashtag tag = template.queryForObject(sql, param, hashtagRowMapper());
            assert tag != null;
            return Optional.of(tag);
@@ -60,6 +62,7 @@ public class HashtagJdbcRepository implements HashtagRepository {
         }
     }
 
+    // tag field has only one element: tag , so that it doesn't need condition dto
     @Override
     public Optional<Hashtag> findByTag(String tagName) {
         String sql = "SELECT * FROM hashtag WHERE hashtag=:tagName";
@@ -74,14 +77,9 @@ public class HashtagJdbcRepository implements HashtagRepository {
     }
 
     @Override
-    public List<Hashtag> findByCond(HashtagVo cond) {
-        return List.of();
-    }
-
-    @Override
-    public void delete(Long tagId) {
-        String sql = "DELETE FROM hashtag WHERE tag_id=:tagId";
-        Map<String, Object> param = Map.of("tagId", tagId);
+    public void delete(Long hashtagId) {
+        String sql = "DELETE FROM hashtag WHERE hashtag_id=:tagId";
+        Map<String, Object> param = Map.of("tagId", hashtagId);
         template.update(sql, param);
     }
 

@@ -15,6 +15,5 @@ public interface HashtagRepository {
     void tagDown(Long tagId);
     Optional<Hashtag> findById(Long tagId);
     Optional<Hashtag> findByTag(String tagName);
-    List<Hashtag> findByCond(HashtagVo cond);
     void delete(Long tagId);
 }
