@@ -1,6 +1,5 @@
 package com.colour.board.hashtag.repository;
 
-import com.colour.board.hashtag.dto.HashtagVo;
 import com.colour.board.hashtag.entity.Hashtag;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
@@ -11,7 +10,6 @@ import org.springframework.jdbc.core.namedparam.SqlParameterSource;
 import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 
 import javax.sql.DataSource;
-import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
