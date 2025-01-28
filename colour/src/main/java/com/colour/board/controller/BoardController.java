@@ -41,4 +41,9 @@ public class BoardController {
         service.deleteBoard(postId);
         return "board deleted - done";
     }
+
+    @GetMapping("search")
+    public String search() {
+        return "search";
+    }
 }
