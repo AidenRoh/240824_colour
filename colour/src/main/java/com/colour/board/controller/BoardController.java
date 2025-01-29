@@ -43,7 +43,8 @@ public class BoardController {
     }
 
     @GetMapping("search")
-    public String search() {
+    public String search(Long hashtagId) {
+        service.findByHashtagId(hashtagId);
         return "search";
     }
 }
