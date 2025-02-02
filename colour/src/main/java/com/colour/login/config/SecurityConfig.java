@@ -2,6 +2,7 @@ package com.colour.login.config;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.core.userdetails.User;
@@ -37,8 +38,9 @@ public class SecurityConfig {
                             response.sendRedirect(redirectUrl);
                         })
                         .failureUrl("/login")
-                        .permitAll()
-                )
+                        .permitAll())
+                .csrf(Customizer.withDefaults())
+
         ;
         return http.build();
     }
