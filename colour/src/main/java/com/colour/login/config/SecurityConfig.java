@@ -40,7 +40,7 @@ public class SecurityConfig {
                         .failureUrl("/login")
                         .permitAll())
                 .csrf(Customizer.withDefaults())
-
+                .cors(Customizer.withDefaults())
         ;
         return http.build();
     }
