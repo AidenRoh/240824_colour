@@ -24,7 +24,7 @@ public class SecurityConfig {
         HttpSessionRequestCache requestCache = new HttpSessionRequestCache();
         requestCache.setMatchingRequestParameterName("testLogin=y");
 
-        http
+        http.securityMatcher("/board")
                 .authorizeRequests(auth -> auth
                         .anyRequest().authenticated())
                 .formLogin(form -> form
