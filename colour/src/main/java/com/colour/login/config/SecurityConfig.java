@@ -26,6 +26,7 @@ public class SecurityConfig {
 
         http.securityMatcher("/board")
                 .authorizeRequests(auth -> auth
+                        .requestMatchers("/board/test").hasRole("USER")
                         .anyRequest().authenticated())
                 .formLogin(form -> form
                         .loginPage("/login")
@@ -44,6 +45,7 @@ public class SecurityConfig {
                 .cors(Customizer.withDefaults())
         ;
         return http.build();
+
     }
 
     @Bean
