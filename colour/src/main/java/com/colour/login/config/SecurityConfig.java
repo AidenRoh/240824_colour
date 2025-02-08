@@ -2,6 +2,7 @@ package com.colour.login.config;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.security.authentication.DefaultAuthenticationEventPublisher;
 import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
@@ -25,7 +26,7 @@ public class SecurityConfig {
         requestCache.setMatchingRequestParameterName("testLogin=y");
 
         http.securityMatcher("/board")
-                .authorizeRequests(auth -> auth
+                .authorizeHttpRequests(auth -> auth
                         .requestMatchers("/board/test").hasRole("USER")
                         .anyRequest().authenticated())
                 .formLogin(form -> form
@@ -52,6 +53,11 @@ public class SecurityConfig {
     public UserDetailsService userDetailsService() {
         UserDetails exampleUser = User.withUsername("user").password("{noop}1234").roles("USER").build();
         return new InMemoryUserDetailsManager(exampleUser);
+    }
+
+    @Bean
+    public DefaultAuthenticationEventPublisher authenticationEventPublisher() {
+        return new DefaultAuthenticationEventPublisher();
     }
 
 }
