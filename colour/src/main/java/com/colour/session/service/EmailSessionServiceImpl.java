@@ -1,6 +1,6 @@
 package com.colour.session.service;
 
-import com.colour.member.dto.MemberRegisterDto;
+import com.colour.member.domain.dto.MemberRegisterDto;
 import com.colour.session.entity.EmailSession;
 import com.colour.session.repository.EmailSessionRepository;
 import org.springframework.beans.factory.annotation.Autowired;

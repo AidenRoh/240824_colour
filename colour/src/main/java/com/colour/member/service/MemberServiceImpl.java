@@ -1,8 +1,8 @@
 package com.colour.member.service;
 
-import com.colour.member.dto.MemberSearchCond;
-import com.colour.member.dto.MemberUpdateDto;
-import com.colour.member.entity.Member;
+import com.colour.member.domain.dto.MemberSearchCond;
+import com.colour.member.domain.dto.MemberUpdateDto;
+import com.colour.member.domain.entity.Member;
 import com.colour.member.repository.MemberRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;

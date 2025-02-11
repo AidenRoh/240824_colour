@@ -1,4 +1,4 @@
-package com.colour.member.entity;
+package com.colour.member.domain.entity;
 
 import lombok.Data;
 

@@ -1,13 +1,10 @@
 package com.colour.session.service;
 
-import com.colour.member.dto.MemberRegisterDto;
+import com.colour.member.domain.dto.MemberRegisterDto;
 import com.colour.session.entity.EmailSession;
-import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-
-import static org.junit.jupiter.api.Assertions.*;
 
 @SpringBootTest
 class EmailSessionServiceImplTest {

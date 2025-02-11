@@ -5,6 +5,8 @@ import com.colour.board.post.dto.PostDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Stack;
+
 @RestController
 @RequestMapping("board/test")
 @RequiredArgsConstructor
@@ -47,4 +49,5 @@ public class BoardController {
         service.findByHashtagId(hashtagId);
         return "search";
     }
+
 }

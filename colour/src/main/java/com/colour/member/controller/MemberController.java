@@ -1,9 +1,9 @@
 package com.colour.member.controller;
 
 import com.colour.mail.service.MailService;
-import com.colour.member.dto.MemberRegisterDto;
-import com.colour.member.dto.MemberUpdateDto;
-import com.colour.member.entity.Member;
+import com.colour.member.domain.dto.MemberRegisterDto;
+import com.colour.member.domain.dto.MemberUpdateDto;
+import com.colour.member.domain.entity.Member;
 import com.colour.member.service.MemberService;
 import com.colour.session.entity.EmailSession;
 import com.colour.session.service.EmailSessionService;

@@ -1,4 +1,4 @@
-package com.colour.member.dto;
+package com.colour.member.domain.dto;
 
 import lombok.Getter;
 import lombok.Setter;
