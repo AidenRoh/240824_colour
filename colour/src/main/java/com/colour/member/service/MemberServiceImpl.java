@@ -1,26 +1,31 @@
 package com.colour.member.service;
 
+import com.colour.member.domain.MemberMapper;
+import com.colour.member.domain.dto.MemberRegisterDto;
 import com.colour.member.domain.dto.MemberSearchCond;
 import com.colour.member.domain.dto.MemberUpdateDto;
 import com.colour.member.domain.entity.Member;
 import com.colour.member.repository.MemberRepository;
+import lombok.RequiredArgsConstructor;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
 @Service
+@RequiredArgsConstructor
 @Transactional
 public class MemberServiceImpl implements MemberService {
 
     private final MemberRepository repository;
-
-    public MemberServiceImpl(MemberRepository memberRepository) {
-        this.repository = memberRepository;
-    }
+    private final MemberMapper mapper;
+    private final PasswordEncoder passwordEncoder;
 
     @Override
-    public Member registerMember(Member member) {
+    public Member registerMember(MemberRegisterDto dto) {
+        MemberRegisterDto encodedDto = passwordEncoder(dto);
+        Member member = mapper.memberRegisterToEntity(encodedDto);
         return repository.create(member);
     }
 
@@ -40,6 +45,11 @@ public class MemberServiceImpl implements MemberService {
     }
 
     @Override
+    public Member findMemberByEmail(String email) {
+        return repository.findByEmail(email);
+    }
+
+    @Override
     public void deleteMember(Long memberId) {
         repository.delete(memberId);
     }
@@ -47,5 +57,11 @@ public class MemberServiceImpl implements MemberService {
     @Override
     public boolean isMemberExist(String email) {
         return repository.existsByEmail(email);
+    }
+
+    private MemberRegisterDto passwordEncoder(MemberRegisterDto dto) {
+        String encodingPassword = passwordEncoder.encode(dto.getPassword());
+        dto.setPassword(encodingPassword);
+        return dto;
     }
 }
