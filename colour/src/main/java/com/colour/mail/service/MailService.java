@@ -4,9 +4,9 @@ import jakarta.mail.MessagingException;
 import jakarta.mail.internet.MimeMessage;
 import lombok.RequiredArgsConstructor;
 import org.springframework.mail.javamail.JavaMailSender;
-import org.springframework.stereotype.Service;
+import org.springframework.stereotype.Component;
 
-@Service
+@Component
 @RequiredArgsConstructor
 public class MailService {
 
@@ -15,10 +15,16 @@ public class MailService {
     private static int authCode;
 
     public static void createNumber() {
-        authCode = (int)(Math.random() * (97520)) + 100000;
+        authCode = (int) (Math.random() * (97520)) + 100000;
     }
 
-    public MimeMessage createMail(String mail) {
+    public String sendAuthenticationMail(String mail) {
+        MimeMessage message = createMail(mail);
+        mailSender.send(message);
+        return String.valueOf(authCode);
+    }
+
+    private MimeMessage createMail(String mail) {
         MimeMessage message = mailSender.createMimeMessage();
         createNumber();
         try {
@@ -34,12 +40,5 @@ public class MailService {
             e.printStackTrace();
         }
         return message;
-    }
-
-    public int sendMail(String mail) {
-        MimeMessage message = createMail(mail);
-        mailSender.send(message);
-
-        return authCode;
     }
 }
