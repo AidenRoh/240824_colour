@@ -26,11 +26,11 @@ import java.util.*;
 public class PostJdbcRepository implements PostRepository {
 
     private NamedParameterJdbcTemplate template;
-    private SimpleJdbcInsert insertBoard;
+    private SimpleJdbcInsert insert;
 
     public PostJdbcRepository(DataSource dataSource) {
         this.template = new NamedParameterJdbcTemplate(dataSource);
-        this.insertBoard = new SimpleJdbcInsert(dataSource)
+        this.insert = new SimpleJdbcInsert(dataSource)
                 .withTableName("post")
                 .usingGeneratedKeyColumns("post_id");
     }
@@ -38,7 +38,7 @@ public class PostJdbcRepository implements PostRepository {
     @Override
     public Post save(Post post) {
         SqlParameterSource source = new BeanPropertySqlParameterSource(post);
-        Number postId = insertBoard.executeAndReturnKey(source);
+        Number postId = insert.executeAndReturnKey(source);
         post.setPostId(postId.longValue());
         return post;
     }
@@ -46,7 +46,7 @@ public class PostJdbcRepository implements PostRepository {
     @Override
     public Optional<Post> findById(Long postId) {
         String sql = "SELECT post_id, writer, title, content, color_palette," +
-                " user_like, created_at, updated_at, deleted_at FROM post WHERE post_id = :id";
+                " member_likes, created_at, updated_at, deleted_at FROM post WHERE post_id = :id";
         try {
             Map<String, Object> param = Map.of("id", postId);
             Post post = template.queryForObject(sql, param, postRowMapper());
@@ -71,7 +71,7 @@ public class PostJdbcRepository implements PostRepository {
         boolean andFlag = false;
         String sql = "UPDATE post SET ";
 
-        if (dto.getTitle() != null){
+        if (dto.getTitle() != null) {
             sql += "title=:title";
             param.put("title", dto.getTitle());
             andFlag = true;
@@ -111,6 +111,20 @@ public class PostJdbcRepository implements PostRepository {
         SqlParameterSource param = new MapSqlParameterSource()
                 .addValue("id", postId)
                 .addValue("deletedAt", new Timestamp(new Date().getTime()));
+        template.update(sql, param);
+    }
+
+    @Override
+    public void likePost(Long postId) {
+        String sql = "UPDATE post SET member_likes = member_likes+1 WHERE post_id = :postId";
+        Map<String, Object> param = Map.of("postId", postId);
+        template.update(sql, param);
+    }
+
+    @Override
+    public void dislikePost(Long postId) {
+        String sql = "UPDATE post SET member_likes = member_likes-1 WHERE post_id = :postId";
+        Map<String, Object> param = Map.of("postId", postId);
         template.update(sql, param);
     }
 

@@ -15,7 +15,7 @@ public class Post {
     private String title;
     private String content;
     private String colorPalette;
-    private Long userLikes;
+    private Long memberLikes;
     private Timestamp createdAt;
     private Timestamp updatedAt;
     private Timestamp deletedAt;
@@ -25,7 +25,7 @@ public class Post {
         this.title = title;
         this.content = content;
         this.colorPalette = colorPalette;
-        this.userLikes = DEFAULT_LIKE;
+        this.memberLikes = DEFAULT_LIKE;
         this.createdAt = new Timestamp(new Date().getTime());
     }
 

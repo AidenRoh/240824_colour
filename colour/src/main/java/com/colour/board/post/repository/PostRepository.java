@@ -10,9 +10,17 @@ import java.util.Optional;
 @Repository
 public interface PostRepository {
 
-    Post save(Post board);
+    Post save(Post post);
+
     Optional<Post> findById(Long postId);
+
     List<Post> findByTitle(String title);
-    void update(Long boardId, PostDto dto);
-    void delete(Long boardId);
+
+    void update(Long postId, PostDto dto);
+
+    void delete(Long postId);
+
+    void likePost(Long postId);
+
+    void dislikePost(Long postId);
 }
