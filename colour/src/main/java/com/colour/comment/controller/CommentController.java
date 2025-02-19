@@ -3,66 +3,62 @@ package com.colour.comment.controller;
 import com.colour.comment.dto.ResponseRegisterDto;
 import com.colour.comment.dto.ResponseUpdateDto;
 import com.colour.comment.entity.Comment;
-import com.colour.comment.entity.Response;
 import com.colour.comment.service.ResponseService;
 import com.colour.member.service.MemberService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.Objects;
+
+import static com.colour.security.utils.SecurityUtils.getCurrentMemberId;
 
 @RestController
-@RequestMapping("comment/test")
+@RequestMapping("/comment")
 @RequiredArgsConstructor
 public class CommentController {
 
     private final ResponseService commentService;
     private final MemberService memberService;
 
-    @GetMapping("create-comment")
-    public String createComment() {
-        return "create-comment";
+    @GetMapping("/create")
+    public ResponseEntity<String> createComment() {
+        return ResponseEntity.status(HttpStatus.OK).body("create-comment");
     }
 
-    @PostMapping("create-comment/{board_id}/{member_id}")
-    public String createComment(@RequestBody ResponseRegisterDto dto,
-                                @PathVariable Long board_id, @PathVariable Long member_id) {
-        String writer = memberService.findMemberById(member_id).getUsername();
-        Comment comment = new Comment(board_id, member_id, writer, dto.getComment());
+    @GetMapping("/update")
+    public ResponseEntity<String> updateComment() {
+        return ResponseEntity.status(HttpStatus.OK).body("update-comment");
+    }
+
+    @PostMapping("/{boardId}/create")
+    public ResponseEntity<String> createComment(@RequestBody ResponseRegisterDto dto,
+                                                @PathVariable Long boardId) {
+        long memberId = getCurrentMemberId();
+        String writer = memberService.findMemberById(memberId).getUsername();
+        Comment comment = new Comment(boardId, memberId, writer, dto.getComment());
         commentService.save(comment);
-        return "ok";
+        return ResponseEntity.status(HttpStatus.CREATED).body("ok");
     }
 
-    @GetMapping("update-comment")
-    public String updateComment() {
-        return "update-comment";
+    @PatchMapping("/{commentId}/update")
+    public ResponseEntity<String> updateComment(@RequestBody ResponseUpdateDto dto,
+                                                @PathVariable Long commentId) {
+        commentService.update(getCurrentMemberId(), commentId, dto);
+        return ResponseEntity.status(HttpStatus.OK).body("ok");
     }
 
-    @PatchMapping("update-comment/{member_id}/{comment_id}")
-    public String updateComment(@RequestBody ResponseUpdateDto dto,
-                                @PathVariable Long member_id, @PathVariable Long comment_id) {
-        if (doesWriterRequest(member_id, comment_id)) {
-            commentService.update(comment_id, dto);
-        }
-        return "ok";
-    }
-
-    @GetMapping("get_comments")
+    @GetMapping("/getComments")
     public List<Comment> getComments() {
         return List.of();
     }
 
-    @DeleteMapping("delete-comment/{member_id}/{comment_id}")
-    public String deleteComment(@PathVariable Long member_id, @PathVariable Long comment_id) {
-        if (doesWriterRequest(member_id, comment_id)) {
-            commentService.delete(comment_id);
-        }
-        return "ok";
+    @DeleteMapping("/{commentId}/delete")
+    public ResponseEntity<String> deleteComment(@PathVariable Long commentId) {
+        commentService.delete(getCurrentMemberId(), commentId);
+        return ResponseEntity.status(HttpStatus.NO_CONTENT).body("delete-comment");
     }
 
-    private boolean doesWriterRequest(Long member_id, Long comment_id) {
-        Response comment = commentService.findResponseById(comment_id);
-        return Objects.equals(((Comment) comment).getMemberId(), member_id);
-    }
+
 }

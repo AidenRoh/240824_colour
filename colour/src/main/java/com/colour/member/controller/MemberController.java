@@ -1,80 +1,95 @@
 package com.colour.member.controller;
 
+import com.colour.mail.service.MailService;
 import com.colour.member.domain.dto.MemberRegisterDto;
 import com.colour.member.domain.dto.MemberUpdateDto;
-import com.colour.member.facade.MemberFacadeService;
-import jakarta.servlet.http.Cookie;
+import com.colour.member.service.MemberService;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.io.IOException;
 
+import static com.colour.security.utils.SecurityUtils.getCurrentMemberId;
+
 @RestController
-@RequestMapping("/member/test")
+@RequestMapping("/member")
 @RequiredArgsConstructor
 public class MemberController {
 
-    private final MemberFacadeService facadeService;
+    private final MemberService memberService;
+    private final MailService mailService;
 
-    @GetMapping("/new-member")
-    public String newMember() {
-        return "new-member";
+    @GetMapping("/signUp")
+    public ResponseEntity<String> signup() {
+        return new ResponseEntity<>("new-member", HttpStatus.OK);
     }
 
-    @PostMapping("/new-member")
-    public void newMember(@ModelAttribute("MemberRegisterDto") MemberRegisterDto dto,
-                          HttpServletRequest request,
-                          HttpServletResponse response) throws IOException {
+    @GetMapping("/register")
+    public ResponseEntity<String> register() {
+        return new ResponseEntity<>("member-register", HttpStatus.OK);
+    }
+
+    @GetMapping("/update")
+    public ResponseEntity<String> updateMember() {
+        return new ResponseEntity<>("update-member", HttpStatus.OK);
+    }
+
+    @PostMapping("/signUp")
+    public ResponseEntity<String> signup(@ModelAttribute MemberRegisterDto memberRegisterDto,
+                                         HttpServletRequest request,
+                                         HttpServletResponse response) throws IOException {
         //check existing Member
-        if (facadeService.checkExistsMember(dto)) {
-            response.sendRedirect("http://localhost:8080/member/test/new-member");
-            return;
+        if (memberService.isMemberExist(memberRegisterDto.getEmail())) {
+            response.sendRedirect("http://localhost:8080/login");
+            return new ResponseEntity<>("redirect: login", HttpStatus.TEMPORARY_REDIRECT);
         }
         //set authorizing number by email
-        facadeService.sendAuthenticationMail(dto, request);
+        String authCode = mailService.sendAuthenticationMail(memberRegisterDto.getEmail());
+        HttpSession session = request.getSession();
+        session.setAttribute("EMAIL_AUTH_CODE", authCode);
+        session.setAttribute("SIGN_UP_FORM", memberRegisterDto);
+        session.setMaxInactiveInterval(2 * 60);
         //cookie response
-        Cookie cookie = new Cookie("email", dto.getEmail());
-        response.addCookie(cookie);
-        response.sendRedirect("http://localhost:8080/member/test/member-register");
+        response.sendRedirect("http://localhost:8080/member/register");
+        return new ResponseEntity<>("redirect: register", HttpStatus.TEMPORARY_REDIRECT);
     }
 
-    @GetMapping("/member-register")
-    public String memberRegister() {
-        return "member-register";
-    }
-
-    @PostMapping("/member-register")
-    public String memberRegister(@RequestParam String authcode, HttpServletRequest request) {
-        boolean authCheck = facadeService.checkAuthenticationCode(authcode, request);
-        if (authCheck) {
-            facadeService.registerMember(request);
+    @PostMapping("/register")
+    public ResponseEntity<String> register(@RequestParam String authCode, HttpServletRequest request) {
+        //get-values
+        HttpSession session = request.getSession(false);
+        if (session == null) {
+            throw new RuntimeException("session is null");
         }
-        return "ok";
+        String storedCode = (String) session.getAttribute("EMAIL_AUTH_CODE");
+        MemberRegisterDto storedDto = (MemberRegisterDto) session.getAttribute("SIGN_UP_FORM");
+        //logic
+        if (authCode.equals(storedCode)) {
+            memberService.registerMember(storedDto);
+        }
+        return new ResponseEntity<>("member registered", HttpStatus.CREATED);
     }
 
-    @GetMapping
-    public String updateMember() {
-        return "update-member";
+    @PatchMapping("/update")
+    public ResponseEntity<String> updateMember(@ModelAttribute("MemberUpdateDto") MemberUpdateDto dto) {
+        memberService.updateMember(getCurrentMemberId(), dto);
+        return new ResponseEntity<>("ok", HttpStatus.OK);
     }
 
-    @PatchMapping("/update-member/{member_id}")
-    public String updateMember(@ModelAttribute("MemberUpdateDto") MemberUpdateDto dto,
-                               @PathVariable("member_id") Long member_id) {
-        facadeService.updateMember(dto, member_id);
-        return "ok";
-    }
-
-    @GetMapping("/get-members")
-    public String getMembers() {
+    @GetMapping("/getMembers")
+    public ResponseEntity<String> getMembers() {
         System.out.println("called");
-        return "get-members";
+        return new ResponseEntity<>("get-members", HttpStatus.OK);
     }
 
-    @DeleteMapping("/delete-member/{member_id}")
-    public String deleteMember(@PathVariable("member_id") Long member_id) {
-        facadeService.deleteMember(member_id);
-        return "delete-form";
+    @DeleteMapping("/delete")
+    public ResponseEntity<String> deleteMember() {
+        memberService.deleteMember(getCurrentMemberId());
+        return new ResponseEntity<>("delete-form", HttpStatus.NO_CONTENT);
     }
 }
