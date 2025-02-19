@@ -11,21 +11,20 @@ import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.jdbc.core.namedparam.SqlParameterSource;
 import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
-import org.springframework.stereotype.Repository;
 
 import javax.sql.DataSource;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+
 /*
-* NamedParameterJdbcTemplate
-* SqlParameterSource
-* - BeanPropertySqlParameterSource
-* - MapSqlParameterSource
-* - Map
-* - BeanPropertyRowMapper
-*/
-@Repository
+ * NamedParameterJdbcTemplate
+ * SqlParameterSource
+ * - BeanPropertySqlParameterSource
+ * - MapSqlParameterSource
+ * - Map
+ * - BeanPropertyRowMapper
+ */
 public class MemberJdbcRepository implements MemberRepository {
 
     private final NamedParameterJdbcTemplate template;
@@ -93,6 +92,13 @@ public class MemberJdbcRepository implements MemberRepository {
         } catch (EmptyResultDataAccessException e) {
             return Optional.empty();
         }
+    }
+
+    @Override
+    public Member findByEmail(String email) {
+        String sql = "SELECT * FROM member WHERE email = :email";
+        Map<String, Object> param = Map.of("email", email);
+        return template.queryForObject(sql, param, memberRowMapper());
     }
 
     @Override
