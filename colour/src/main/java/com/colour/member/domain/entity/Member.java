@@ -1,6 +1,6 @@
 package com.colour.member.domain.entity;
 
-import com.colour.security.enums.MemberRole;
+import com.colour.security.config.enums.MemberRole;
 import lombok.Data;
 
 @Data

@@ -1,4 +1,4 @@
-package com.colour.security.enums;
+package com.colour.security.config.enums;
 
 import lombok.Getter;
 
