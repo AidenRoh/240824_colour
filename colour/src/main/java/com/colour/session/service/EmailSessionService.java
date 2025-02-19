@@ -1,7 +1,6 @@
 package com.colour.session.service;
 
 import com.colour.member.domain.dto.MemberRegisterDto;
-import com.colour.session.entity.EmailSession;
 
 public interface EmailSessionService {
 
@@ -9,7 +8,7 @@ public interface EmailSessionService {
 
     String findAuthCode(String email);
 
-    EmailSession findSession(String email);
+    MemberRegisterDto getMemberRegisterDto(String email);
 
     void deleteSession(String email);
 }

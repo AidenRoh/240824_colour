@@ -1,5 +1,6 @@
 package com.colour.session.repository;
 
+import com.colour.member.domain.dto.MemberRegisterDto;
 import com.colour.session.entity.EmailSession;
 import org.springframework.stereotype.Repository;
 
@@ -10,7 +11,7 @@ public interface EmailSessionRepository {
 
     String findAuthCode(String email);
 
-    EmailSession findSession(String email);
+    MemberRegisterDto getMemberRegisterDto(String email);
 
     void deleteSession(String email);
 }

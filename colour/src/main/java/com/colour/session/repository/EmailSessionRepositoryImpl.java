@@ -1,5 +1,6 @@
 package com.colour.session.repository;
 
+import com.colour.member.domain.dto.MemberRegisterDto;
 import com.colour.session.entity.EmailSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.HashOperations;
@@ -35,14 +36,13 @@ public class EmailSessionRepositoryImpl implements EmailSessionRepository {
     }
 
     @Override
-    public EmailSession findSession(String email) {
+    public MemberRegisterDto getMemberRegisterDto(String email) {
         if (operations.size(email) != 0) {
-            return new EmailSession(
-                    email,
-                    operations.get(email, USERNAME.getValue()),
-                    operations.get(email, PASSWORD.getValue()),
-                    operations.get(email, AUTHCODE.getValue())
-            );
+            MemberRegisterDto dto = new MemberRegisterDto();
+            dto.setEmail(email);
+            dto.setUsername(operations.get(email, USERNAME.getValue()));
+            dto.setPassword(operations.get(email, PASSWORD.getValue()));
+            return dto;
         }
         return null;
     }

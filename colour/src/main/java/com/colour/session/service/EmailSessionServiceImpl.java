@@ -1,9 +1,6 @@
 package com.colour.session.service;
 
 import com.colour.member.domain.dto.MemberRegisterDto;
-import com.colour.session.entity.EmailSession;
-import com.colour.session.repository.EmailSessionRepository;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -11,31 +8,29 @@ import org.springframework.transaction.annotation.Transactional;
 @Transactional
 public class EmailSessionServiceImpl implements EmailSessionService {
 
-    @Autowired
-    private EmailSessionRepository emailSessionRepository;
+//    @Autowired
+//    private EmailSessionRepository emailSessionRepository;
 
     @Override
     public void createSession(MemberRegisterDto dto, String authCode) {
-        EmailSession session = new EmailSession(
-                dto.getEmail(),
-                dto.getUsername(),
-                dto.getPassword(),
-                authCode);
-        emailSessionRepository.createSession(session);
+//        Authentication authentication = SecurityContextHolder.getContextHolderStrategy().getContext().getAuthentication();
+//        authentication.
     }
 
     @Override
     public String findAuthCode(String email) {
-        return emailSessionRepository.findAuthCode(email);
+//        return emailSessionRepository.findAuthCode(email);
+        return null;
     }
 
     @Override
-    public EmailSession findSession(String email) {
-        return emailSessionRepository.findSession(email);
+    public MemberRegisterDto getMemberRegisterDto(String email) {
+//        return emailSessionRepository.getMemberRegisterDto(email);
+        return null;
     }
 
     @Override
     public void deleteSession(String email) {
-        emailSessionRepository.deleteSession(email);
+//        emailSessionRepository.deleteSession(email);
     }
 }
