@@ -2,12 +2,15 @@ package com.colour.comment.service;
 
 import com.colour.comment.dto.ResponseSearchCond;
 import com.colour.comment.dto.ResponseUpdateDto;
+import com.colour.comment.entity.Comment;
 import com.colour.comment.entity.Response;
 import com.colour.comment.repository.ResponseRepository;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Objects;
 
 @Service
 @Transactional
@@ -15,7 +18,7 @@ public class ReplyService implements ResponseService {
 
     private final ResponseRepository repository;
 
-    public ReplyService(ResponseRepository repository) {
+    public ReplyService(@Qualifier("replyRepository") ResponseRepository repository) {
         this.repository = repository;
     }
 
@@ -35,12 +38,21 @@ public class ReplyService implements ResponseService {
     }
 
     @Override
-    public void update(Long replyId, ResponseUpdateDto dto) {
-        repository.update(replyId, dto);
+    public void update(Long memberId, Long responseId, ResponseUpdateDto dto) {
+        if (doesWriterRequest(memberId, responseId)) {
+            repository.update(responseId, dto);
+        }
     }
 
     @Override
-    public void delete(Long replyId) {
-        repository.delete(replyId);
+    public void delete(Long memberId, Long responseId) {
+        if (doesWriterRequest(memberId, responseId)) {
+            repository.delete(responseId);
+        }
+    }
+
+    private boolean doesWriterRequest(Long memberId, Long commentId) {
+        Response comment = findResponseById(commentId);
+        return Objects.equals(((Comment) comment).getMemberId(), memberId);
     }
 }
