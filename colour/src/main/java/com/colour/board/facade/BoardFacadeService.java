@@ -1,14 +1,14 @@
 package com.colour.board.facade;
 
-import com.colour.board.hashtag.dto.HashtagVo;
-import com.colour.board.hashtag.entity.Hashtag;
-import com.colour.board.hashtag.service.HashtagService;
-import com.colour.board.post.dto.PostDto;
-import com.colour.board.post.entity.Post;
-import com.colour.board.post.service.PostService;
-import com.colour.board.tagtopost.dto.TagPostDto;
-import com.colour.board.tagtopost.entity.TagPost;
-import com.colour.board.tagtopost.service.TagPostService;
+import com.colour.board.api.hashtag.dto.HashtagVo;
+import com.colour.board.api.hashtag.entity.Hashtag;
+import com.colour.board.api.hashtag.service.HashtagService;
+import com.colour.board.api.post.dto.PostDto;
+import com.colour.board.api.post.entity.Post;
+import com.colour.board.api.post.service.PostService;
+import com.colour.board.api.tagtopost.dto.TagPostDto;
+import com.colour.board.api.tagtopost.entity.TagPost;
+import com.colour.board.api.tagtopost.service.TagPostService;
 import com.colour.member.service.MemberService;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -59,16 +59,16 @@ public class BoardFacadeService {
 
     //Read methods
     public List<Post> getPosts(List<TagPost> tagPosts) {
-        List<Post> container =new ArrayList<>();
+        List<Post> container = new ArrayList<>();
         for (TagPost tagPost : tagPosts) {
             Long postId = tagPost.getPostId();
-            container.add( postService.findPostById(postId));
+            container.add(postService.findPostById(postId));
         }
         return container;
     }
 
     public List<Hashtag> getHashtags(List<TagPost> tagPosts) {
-        List<Hashtag> container =new ArrayList<>();
+        List<Hashtag> container = new ArrayList<>();
         for (TagPost tagPost : tagPosts) {
             Long tagId = tagPost.getHashtagId();
             container.add(hashtagService.findById(tagId));

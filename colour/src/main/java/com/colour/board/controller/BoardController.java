@@ -1,7 +1,7 @@
 package com.colour.board.controller;
 
 import com.colour.board.facade.BoardFacadeService;
-import com.colour.board.post.dto.PostDto;
+import com.colour.board.api.post.dto.PostDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
