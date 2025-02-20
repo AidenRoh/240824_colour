@@ -15,6 +15,9 @@ import javax.sql.DataSource;
 import java.sql.Timestamp;
 import java.util.*;
 
+import static org.springframework.util.CollectionUtils.isEmpty;
+import static org.springframework.util.StringUtils.hasText;
+
 /*
  * NamedParameterJdbcTemplate
  * SqlParameterSource
@@ -71,13 +74,13 @@ public class PostJdbcRepository implements PostRepository {
         boolean andFlag = false;
         String sql = "UPDATE post SET ";
 
-        if (dto.getTitle() != null) {
+        if (hasText(dto.getTitle())) {
             sql += "title=:title";
             param.put("title", dto.getTitle());
             andFlag = true;
         }
 
-        if (dto.getContent() != null) {
+        if (hasText(dto.getContent())) {
             if (andFlag) {
                 sql += ", ";
             }
@@ -86,7 +89,7 @@ public class PostJdbcRepository implements PostRepository {
             andFlag = true;
         }
 
-        if (dto.getColors() != null) {
+        if (isEmpty(dto.getColors())) {
             if (andFlag) {
                 sql += ", ";
             }
