@@ -1,7 +1,7 @@
-package com.colour.board.api.tagtopost.repository;
+package com.colour.board.api.posthashtag.repository;
 
-import com.colour.board.api.tagtopost.dto.TagPostDto;
-import com.colour.board.api.tagtopost.entity.TagPost;
+import com.colour.board.api.posthashtag.dto.PostHashtagDto;
+import com.colour.board.api.posthashtag.entity.PostHashtag;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.namedparam.BeanPropertySqlParameterSource;
@@ -14,70 +14,70 @@ import javax.sql.DataSource;
 import java.util.List;
 import java.util.Map;
 
-public class TagPostJdbcRepository implements TagPostRepository {
+public class PostHashtagJdbcRepository implements PostHashtagRepository {
 
     private final NamedParameterJdbcTemplate template;
     private final SimpleJdbcInsert insert;
 
-    public TagPostJdbcRepository(DataSource dataSource) {
+    public PostHashtagJdbcRepository(DataSource dataSource) {
         this.template = new NamedParameterJdbcTemplate(dataSource);
         this.insert = new SimpleJdbcInsert(dataSource)
-                .withTableName("tag_post")
-                .usingGeneratedKeyColumns("tag_post_id");
+                .withTableName("post_hashtag")
+                .usingGeneratedKeyColumns("post_hashtag_id");
     }
 
     @Override
-    public TagPost save(TagPost tagPost) {
-        SqlParameterSource source = new BeanPropertySqlParameterSource(tagPost);
+    public PostHashtag save(PostHashtag postHashtag) {
+        SqlParameterSource source = new BeanPropertySqlParameterSource(postHashtag);
         Number key = insert.executeAndReturnKey(source);
-        tagPost.setTagPostId(key.longValue());
-        return tagPost;
+        postHashtag.setPostHashtagId(key.longValue());
+        return postHashtag;
     }
 
     @Override
-    public List<TagPost> findByCond(TagPostDto tagPostDto) {
+    public List<PostHashtag> findByCond(PostHashtagDto postHashtagDto) {
         String sql = "SELECT * FROM tag_post WHERE";
         boolean andFlag = false;
-        if (tagPostDto.getTagId() != null) {
-            sql += " tag_post_id = :tagPostId";
+        if (postHashtagDto.getTagId() != null) {
+            sql += " post_hashtag_id = :postHashtagId";
             andFlag = true;
         }
-        if (tagPostDto.getPostId() != null) {
+        if (postHashtagDto.getPostId() != null) {
             if (andFlag) {
                 sql += " AND ";
             }
             sql += " post_id = :postId";
         }
-        if (tagPostDto.getMemberId() != null) {
+        if (postHashtagDto.getMemberId() != null) {
             if (andFlag) {
                 sql += " AND ";
             }
             sql += " member_id = :memberId";
         }
         SqlParameterSource params = new MapSqlParameterSource()
-                .addValue("tagPostId", tagPostDto.getTagId())
-                .addValue("postId", tagPostDto.getPostId())
-                .addValue("memberId", tagPostDto.getMemberId());
+                .addValue("postHashtagId", postHashtagDto.getTagId())
+                .addValue("postId", postHashtagDto.getPostId())
+                .addValue("memberId", postHashtagDto.getMemberId());
         return template.query(sql, params, tagPostRowMapper());
     }
 
     @Override
-    public void delete(Long tagPostId) {
-        String sql = "DELETE FROM tag_post WHERE tag_post_id = :tagPostId";
-        Map<String, Object> param = Map.of("tagPostId", tagPostId);
+    public void delete(Long postHashtagId) {
+        String sql = "DELETE FROM post_hashtag WHERE post_hashtag_id = :postHashtagId";
+        Map<String, Object> param = Map.of("postHashtagId", postHashtagId);
         template.update(sql, param);
     }
 
     @Override
     public void delete(Long postId, Long memberId) {
-        String sql = "DELETE * FROM tag_post WHERE post_id=:postId AND member_id=:memberId";
+        String sql = "DELETE * FROM post_hashtag WHERE post_id=:postId AND member_id=:memberId";
         SqlParameterSource source = new MapSqlParameterSource()
                 .addValue("postId", postId)
                 .addValue("memberId", memberId);
         template.update(sql, source);
     }
 
-    private RowMapper<TagPost> tagPostRowMapper() {
-        return new BeanPropertyRowMapper<>(TagPost.class);
+    private RowMapper<PostHashtag> tagPostRowMapper() {
+        return new BeanPropertyRowMapper<>(PostHashtag.class);
     }
 }
