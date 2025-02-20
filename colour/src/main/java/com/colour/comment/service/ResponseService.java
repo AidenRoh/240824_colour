@@ -9,8 +9,12 @@ import java.util.List;
 public interface ResponseService {
 
     Response save(Response response);
+
     Response findResponseById(Long responseId);
+
     List<Response> findAll(ResponseSearchCond cond);
-    void update(Long commentId, ResponseUpdateDto dto);
-    void delete(Long commentId);
+
+    void update(Long memberId, Long responseId, ResponseUpdateDto dto);
+
+    void delete(Long memberId, Long responseId);
 }
