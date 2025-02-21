@@ -1,4 +1,4 @@
-package com.colour.comment.entity;
+package com.colour.comment.domain.entity;
 
 import lombok.Data;
 
@@ -6,7 +6,7 @@ import java.sql.Timestamp;
 import java.util.Date;
 
 @Data
-public class Reply implements Response{
+public class Reply implements Response {
 
     private Long replyId;
     private Long commentId;
