@@ -18,7 +18,7 @@ public class FollowServiceImpl implements FollowService {
 
     @Override
     public void followUser(FollowDto followDto) {
-        Follow follow = new Follow();
+        Follow follow = new Follow(followDto.getFollowerId(), followDto.getFolloweeId());
         repository.follow(follow);
     }
 
