@@ -1,145 +1,80 @@
 package com.colour.board.facade;
 
-import com.colour.board.api.hashtag.dto.HashtagVo;
-import com.colour.board.api.hashtag.entity.Hashtag;
+import com.colour.board.api.hashtag.domain.dto.HashtagDto;
+import com.colour.board.api.hashtag.domain.entity.Hashtag;
 import com.colour.board.api.hashtag.service.HashtagService;
-import com.colour.board.api.post.dto.PostDto;
-import com.colour.board.api.post.entity.Post;
+import com.colour.board.api.likes.domain.dto.LikesDto;
+import com.colour.board.api.likes.domain.entity.Likes;
+import com.colour.board.api.likes.service.LikesService;
+import com.colour.board.api.post.domain.dto.PostDto;
+import com.colour.board.api.post.domain.entity.Post;
 import com.colour.board.api.post.service.PostService;
-import com.colour.board.api.tagtopost.dto.TagPostDto;
-import com.colour.board.api.tagtopost.entity.TagPost;
-import com.colour.board.api.tagtopost.service.TagPostService;
-import com.colour.member.service.MemberService;
+import com.colour.board.api.posthashtag.domain.entity.PostHashtag;
+import com.colour.board.api.posthashtag.service.PostHashtagService;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
-import java.util.ArrayList;
-import java.util.List;
 
 @Service
 @Transactional
 public class BoardFacadeService {
 
-    private final MemberService memberService;
     private final PostService postService;
     private final HashtagService hashtagService;
-    private final TagPostService tagPostService;
+    private final PostHashtagService postHashtagService;
+    private final LikesService likesService;
 
-    public BoardFacadeService(MemberService memberService, PostService postService,
-                              HashtagService hashtagService, TagPostService tagPostService) {
-        this.memberService = memberService;
+    public BoardFacadeService(PostService postService, HashtagService hashtagService,
+                              PostHashtagService postHashtagService, LikesService likesService) {
         this.postService = postService;
         this.hashtagService = hashtagService;
-        this.tagPostService = tagPostService;
+        this.postHashtagService = postHashtagService;
+        this.likesService = likesService;
+    }
+
+    //crud_board
+    public void createTempBoard(Long memberId) {
+        postService.createPost(Post.createTemporary(memberId));
     }
 
     public void createBoard(PostDto dto, Long memberId) {
-        //get post elements
-        String writer = memberService.findMemberById(memberId).getUsername();
-        String colorPalette = dto.getColors().toString();
-        //create post
-        Post post = postService.createPost(new Post(writer, dto.getTitle(), dto.getContent(), colorPalette));
-        registerHashtag(dto.getHashtags(), post.getPostId(), memberId);
+        postService.createPost(new Post(memberId, dto.getTitle(), dto.getContent()));
     }
 
-    public void updateBoard(PostDto dto, Long postId, Long memberId) {
-        List<HashtagVo> newHashtagVo = dto.getHashtags();
-
-        postService.updatePost(postId, dto);
-        if (newHashtagVo != null) {
-            abandonHashtag(postId);
-            registerHashtag(newHashtagVo, postId, memberId);
-        }
+    public void updateBoard(PostDto dto, Long postId, long memberId) {
+        postService.updatePost(postId, dto, memberId);
     }
 
-    public void deleteBoard(Long postId) {
-        abandonHashtag(postId);
-        postService.deletePost(postId);
+    public void deleteBoard(Long postId, long memberId) {
+        postService.deletePost(postId, memberId);
     }
 
-    //Read methods
-    public List<Post> getPosts(List<TagPost> tagPosts) {
-        List<Post> container = new ArrayList<>();
-        for (TagPost tagPost : tagPosts) {
-            Long postId = tagPost.getPostId();
-            container.add(postService.findPostById(postId));
-        }
-        return container;
+    //hashtag
+    public void createHashtag(HashtagDto dto, long postId, long memberId) {
+        Hashtag hashtag = hashtagService.createHashtag(new Hashtag(dto.getHashtag()));
+        if (!postHashtagService.isPostHashtagExist(postId, hashtag.getHashtagId())) {
+            postHashtagService.create(new PostHashtag(hashtag.getHashtagId(), postId, memberId));
+        } else hashtagService.deleteHashtag(hashtag.getHashtagId());
+        // TODO: 이미 등록된 태그입니다.
     }
 
-    public List<Hashtag> getHashtags(List<TagPost> tagPosts) {
-        List<Hashtag> container = new ArrayList<>();
-        for (TagPost tagPost : tagPosts) {
-            Long tagId = tagPost.getHashtagId();
-            container.add(hashtagService.findById(tagId));
-        }
-        return container;
+    public void deleteHashtag(long hashtagId, long postId) {
+        if (postHashtagService.isPostHashtagExist(postId, hashtagId)) {
+            postHashtagService.delete(postId, hashtagId);
+            hashtagService.deleteHashtag(hashtagId);
+        } else return; // TODO: 이미 삭제된 태그입니다.
     }
 
-    public List<TagPost> findByPostId(Long postId) {
-        TagPostDto dto = new TagPostDto();
-        dto.setPostId(postId);
-        return tagPostService.findByCond(dto);
+    //likes
+    public void likePost(LikesDto dto) {
+        if (!likesService.isLikeExist(dto)) {
+            likesService.likePost(new Likes(dto.getPostId(), dto.getMemberId()));
+        } // TODO: 이미 좋아요를 눌렀습니다.
     }
 
-    public List<TagPost> findByHashtagId(Long hashtagId) {
-        TagPostDto dto = new TagPostDto();
-        dto.setTagId(hashtagId);
-        return tagPostService.findByCond(dto);
+    public void dislikePost(LikesDto dto) {
+        if (likesService.isLikeExist(dto)) {
+            likesService.dislikePost(dto);
+        } else return; // TODO: 이미 취소된 좋아요입니다.
     }
 
-    public List<TagPost> findByMemberId(Long memberId) {
-        TagPostDto dto = new TagPostDto();
-        dto.setMemberId(memberId);
-        return tagPostService.findByCond(dto);
-    }
-
-    public List<Post> findByTitle(String title) {
-        return postService.findPostByTitle(title);
-    }
-
-    //internal logic
-    private void registerHashtag(List<HashtagVo> tags, Long postId, Long memberId) {
-        //create hashtag
-        List<Hashtag> newHashtags = createHashtag(tags);
-        //create tag_post
-        createTagPost(newHashtags, postId, memberId);
-    }
-
-    private void abandonHashtag(Long postId) {
-        List<TagPost> tagPostList = findByPostId(postId);
-        for (TagPost tagPost : tagPostList) {
-            hashtagService.delete(tagPost.getHashtagId());
-            tagPostService.delete(tagPost.getTagPostId());
-        }
-    }
-
-    private List<Hashtag> createHashtag(List<HashtagVo> tags) {
-        List<Hashtag> tagList = new ArrayList<>();
-        for (HashtagVo tag : tags) {
-            Hashtag savedTag = hashtagService.save(new Hashtag(tag.getHashtag()));
-            tagList.add(savedTag);
-        }
-        return tagList;
-    }
-
-    private void createTagPost(List<Hashtag> tagList, Long postId, Long memberId) {
-        for (Hashtag hashtag : tagList) {
-            tagPostService.save(new TagPost(hashtag.getHashtagId(), postId, memberId));
-        }
-    }
-
-    /*
-    // 게시판에 등록된 해시태그만 수정할 시
-    public void removeHashtag(Long postId, Long hashtagId) {
-        hashtagService.delete(hashtagId);
-        tagPostService.delete(hashtagId, postId);
-    }
-
-    public void addHashtag(Long postId, Long memberId, HashtagVo dto) {
-        Hashtag tag = new Hashtag(dto.getHashTag());
-        Hashtag savedTag = hashtagService.save(tag);
-        tagPostService.save(new TagPost(savedTag.getHashtagId(), postId, memberId));
-    }
-    */
 }
