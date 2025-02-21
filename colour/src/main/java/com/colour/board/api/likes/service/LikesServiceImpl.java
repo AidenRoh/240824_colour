@@ -1,7 +1,9 @@
 package com.colour.board.api.likes.service;
 
-import com.colour.board.api.post.repository.PostRepository;
+import com.colour.board.api.likes.domain.dto.LikesDto;
+import com.colour.board.api.likes.domain.entity.Likes;
 import com.colour.board.api.likes.repository.LikesRepository;
+import com.colour.board.api.post.repository.PostRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -9,23 +11,28 @@ import org.springframework.transaction.annotation.Transactional;
 @Transactional
 public class LikesServiceImpl implements LikesService {
 
-    private final LikesRepository likeRepository;
+    private final LikesRepository likesRepository;
     private final PostRepository postRepository;
 
     public LikesServiceImpl(LikesRepository repository, PostRepository postRepository) {
-        this.likeRepository = repository;
+        this.likesRepository = repository;
         this.postRepository = postRepository;
     }
 
     @Override
-    public void likePost(long postId, long memberId) {
-        likeRepository.saveLike(postId, memberId);
-        postRepository.likePost(postId);
+    public void likePost(Likes likes) {
+        likesRepository.save(likes);
+        postRepository.likePost(likes.getPostId());
     }
 
     @Override
-    public void dislikePost(long postId, long memberId) {
-        likeRepository.deleteLike(postId, memberId);
-        postRepository.dislikePost(postId);
+    public void dislikePost(LikesDto dto) {
+        likesRepository.delete(dto.getPostId(), dto.getMemberId());
+        postRepository.dislikePost(dto.getPostId());
+    }
+
+    @Override
+    public boolean isLikeExist(LikesDto dto) {
+        return likesRepository.existsByKeys(dto.getPostId(), dto.getMemberId());
     }
 }

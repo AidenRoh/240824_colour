@@ -1,7 +1,8 @@
 package com.colour.board.controller;
 
+import com.colour.board.api.likes.domain.dto.LikesDto;
+import com.colour.board.api.post.domain.dto.PostDto;
 import com.colour.board.facade.BoardFacadeService;
-import com.colour.board.api.post.dto.PostDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -20,7 +21,8 @@ public class BoardController {
 
     @GetMapping("/create")
     public ResponseEntity<String> createBoard() {
-        return ResponseEntity.status(HttpStatus.OK).body("board created");
+        service.createTempBoard(getCurrentMemberId());
+        return ResponseEntity.status(HttpStatus.OK).body("temporary board created");
     }
 
     @GetMapping("/update")
@@ -28,7 +30,7 @@ public class BoardController {
         return ResponseEntity.status(HttpStatus.OK).body("board updated");
     }
 
-    @PostMapping("/create")
+    @PutMapping("/create")
     public ResponseEntity<String> createBoard(@RequestBody PostDto dto) {
         service.createBoard(dto, getCurrentMemberId());
         return ResponseEntity.status(HttpStatus.CREATED).body("board created - done");
@@ -42,14 +44,28 @@ public class BoardController {
 
     @DeleteMapping("/{boardId}/delete")
     public ResponseEntity<String> deleteBoard(@PathVariable Long boardId) {
-        service.deleteBoard(boardId);
+        service.deleteBoard(boardId, getCurrentMemberId());
         return ResponseEntity.status(HttpStatus.NO_CONTENT).body("board deleted - done");
     }
 
-    @GetMapping("/search")
-    public String search(Long hashtagId) {
-        service.findByHashtagId(hashtagId);
-        return "search";
+    @PostMapping("{boardId}/likePost")
+    public ResponseEntity<String> likePost(@PathVariable long boardId) {
+        LikesDto dto = LikesDto.builder().postId(boardId).memberId(getCurrentMemberId()).build();
+        service.likePost(dto);
+        return ResponseEntity.status(HttpStatus.CREATED).body("like this post");
     }
+
+    @DeleteMapping("{boardId}/dislikePost")
+    public ResponseEntity<String> dislikePost(@RequestParam long boardId) {
+        LikesDto dto = LikesDto.builder().postId(boardId).memberId(getCurrentMemberId()).build();
+        service.dislikePost(dto);
+        return ResponseEntity.status(HttpStatus.NO_CONTENT).body("unlike this post");
+    }
+
+//    @GetMapping("/search")
+//    public String search(Long hashtagId) {
+//        service.findByHashtagId(hashtagId);
+//        return "search";
+//    }
 
 }

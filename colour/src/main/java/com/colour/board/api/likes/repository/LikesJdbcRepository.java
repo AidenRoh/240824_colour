@@ -1,35 +1,42 @@
 package com.colour.board.api.likes.repository;
 
-import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
+import com.colour.board.api.likes.domain.entity.Likes;
+import org.springframework.jdbc.core.namedparam.BeanPropertySqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
+import org.springframework.jdbc.core.namedparam.SqlParameterSource;
+import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 
 import javax.sql.DataSource;
-import java.sql.Timestamp;
-import java.util.Date;
 import java.util.Map;
 
 public class LikesJdbcRepository implements LikesRepository {
 
     private final NamedParameterJdbcTemplate template;
+    private final SimpleJdbcInsert insert;
 
     public LikesJdbcRepository(DataSource dataSource) {
         this.template = new NamedParameterJdbcTemplate(dataSource);
+        this.insert = new SimpleJdbcInsert(dataSource)
+                .withTableName("likes");
     }
 
     @Override
-    public void saveLike(long postId, long memberId) {
-        String sql = "INSERT INTO likes (post_id, member_id, created_at) VALUES (:postId, :memberId, :createdAt)";
-        MapSqlParameterSource params = new MapSqlParameterSource()
-                .addValue("postId", postId)
-                .addValue("memberId", memberId)
-                .addValue("createdAt", new Timestamp(new Date().getTime()));
-        template.update(sql, params);
+    public void save(Likes likes) {
+        SqlParameterSource params = new BeanPropertySqlParameterSource(likes);
+        insert.execute(params);
     }
 
     @Override
-    public void deleteLike(long postId, long memberId) {
+    public void delete(long postId, long memberId) {
         String sql = "DELETE FROM likes WHERE post_id = :postId and member_id = :memberId";
         Map<String, Object> params = Map.of("postId", postId, "memberId", memberId);
         template.update(sql, params);
+    }
+
+    @Override
+    public boolean existsByKeys(long postId, long memberId) {
+        String sql = "SELECT COUNT(*) FROM likes WHERE post_id = :postId AND member_id = :memberId";
+        Map<String, Object> params = Map.of("postId", postId, "memberId", memberId);
+        return template.queryForObject(sql, params, Integer.class) == 1;
     }
 }
