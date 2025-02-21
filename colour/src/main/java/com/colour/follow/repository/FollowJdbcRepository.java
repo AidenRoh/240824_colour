@@ -1,12 +1,12 @@
 package com.colour.follow.repository;
 
-import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
+import com.colour.follow.domain.entity.Follow;
+import org.springframework.jdbc.core.namedparam.BeanPropertySqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
+import org.springframework.jdbc.core.namedparam.SqlParameterSource;
 import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 
 import javax.sql.DataSource;
-import java.sql.Timestamp;
-import java.util.Date;
 import java.util.Map;
 
 public class FollowJdbcRepository implements FollowRepository {
@@ -21,13 +21,9 @@ public class FollowJdbcRepository implements FollowRepository {
     }
 
     @Override
-    public void follow(long followerId, long followeeId) {
-        String sql = "INSERT INTO follow (follower_id, followee_id, created_at) VALUES (:followerId, :followeeId, :createdAt)";
-        MapSqlParameterSource params = new MapSqlParameterSource()
-                .addValue("followerId", followerId)
-                .addValue("followeeId", followeeId)
-                .addValue("createdAt", new Timestamp(new Date().getTime()));
-        template.update(sql, params);
+    public void follow(Follow follow) {
+        SqlParameterSource source = new BeanPropertySqlParameterSource(follow);
+        insert.execute(source);
     }
 
     @Override

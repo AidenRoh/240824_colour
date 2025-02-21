@@ -1,7 +1,9 @@
 package com.colour.follow.service;
 
-public interface FollowService {
-    void followUser(long followerId, long followeeId);
+import com.colour.follow.domain.dto.FollowDto;
 
-    void unfollowUser(long followerId, long followeeId);
+public interface FollowService {
+    void followUser(FollowDto followDto);
+
+    void unfollowUser(FollowDto followDto);
 }

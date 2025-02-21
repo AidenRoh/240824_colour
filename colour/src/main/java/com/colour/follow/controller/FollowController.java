@@ -1,5 +1,6 @@
 package com.colour.follow.controller;
 
+import com.colour.follow.domain.dto.FollowDto;
 import com.colour.follow.service.FollowService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -20,14 +21,16 @@ public class FollowController {
     @PostMapping("follow")
     public ResponseEntity<String> followMember(@RequestParam long followeeId) {
         Long followerId = getCurrentMemberId();
-        followService.followUser(followerId, followeeId);
+        FollowDto dto = FollowDto.builder().followerId(followerId).followeeId(followeeId).build();
+        followService.followUser(dto);
         return ResponseEntity.status(HttpStatus.OK).build();
     }
 
     @DeleteMapping("unfollow")
     public ResponseEntity<String> unfollowMember(@RequestParam long followeeId) {
         Long followerId = getCurrentMemberId();
-        followService.unfollowUser(followerId, followeeId);
+        FollowDto dto = FollowDto.builder().followerId(followerId).followeeId(followeeId).build();
+        followService.unfollowUser(dto);
         return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
     }
 }
