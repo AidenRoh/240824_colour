@@ -1,17 +1,18 @@
 package com.colour.board.api.posthashtag.service;
 
-import com.colour.board.api.posthashtag.dto.PostHashtagDto;
-import com.colour.board.api.posthashtag.entity.PostHashtag;
+import com.colour.board.api.posthashtag.domain.dto.PostHashtagDto;
+import com.colour.board.api.posthashtag.domain.entity.PostHashtag;
 
 import java.util.List;
 
 public interface PostHashtagService {
 
-    PostHashtag save(PostHashtag postHashtag);
+    void create(PostHashtag postHashtag);
 
     List<PostHashtag> findByCond(PostHashtagDto dto);
 
-    void delete(Long postHashtagId);
+    void delete(long postId, long hashtagId);
 
-    void delete(Long postId, Long memberId);
+    boolean isPostHashtagExist(long postId, long hashtagId);
+
 }

@@ -1,7 +1,7 @@
 package com.colour.board.api.posthashtag.repository;
 
-import com.colour.board.api.posthashtag.dto.PostHashtagDto;
-import com.colour.board.api.posthashtag.entity.PostHashtag;
+import com.colour.board.api.posthashtag.domain.dto.PostHashtagDto;
+import com.colour.board.api.posthashtag.domain.entity.PostHashtag;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.namedparam.BeanPropertySqlParameterSource;
@@ -22,24 +22,21 @@ public class PostHashtagJdbcRepository implements PostHashtagRepository {
     public PostHashtagJdbcRepository(DataSource dataSource) {
         this.template = new NamedParameterJdbcTemplate(dataSource);
         this.insert = new SimpleJdbcInsert(dataSource)
-                .withTableName("post_hashtag")
-                .usingGeneratedKeyColumns("post_hashtag_id");
+                .withTableName("post_hashtag");
     }
 
     @Override
-    public PostHashtag save(PostHashtag postHashtag) {
+    public void save(PostHashtag postHashtag) {
         SqlParameterSource source = new BeanPropertySqlParameterSource(postHashtag);
-        Number key = insert.executeAndReturnKey(source);
-        postHashtag.setPostHashtagId(key.longValue());
-        return postHashtag;
+        insert.execute(source);
     }
 
     @Override
     public List<PostHashtag> findByCond(PostHashtagDto postHashtagDto) {
         String sql = "SELECT * FROM tag_post WHERE";
         boolean andFlag = false;
-        if (postHashtagDto.getTagId() != null) {
-            sql += " post_hashtag_id = :postHashtagId";
+        if (postHashtagDto.getHashtagId() != null) {
+            sql += " hashtag_id = :hashtagId";
             andFlag = true;
         }
         if (postHashtagDto.getPostId() != null) {
@@ -55,26 +52,24 @@ public class PostHashtagJdbcRepository implements PostHashtagRepository {
             sql += " member_id = :memberId";
         }
         SqlParameterSource params = new MapSqlParameterSource()
-                .addValue("postHashtagId", postHashtagDto.getTagId())
+                .addValue("hashtagId", postHashtagDto.getHashtagId())
                 .addValue("postId", postHashtagDto.getPostId())
                 .addValue("memberId", postHashtagDto.getMemberId());
         return template.query(sql, params, tagPostRowMapper());
     }
 
     @Override
-    public void delete(Long postHashtagId) {
-        String sql = "DELETE FROM post_hashtag WHERE post_hashtag_id = :postHashtagId";
-        Map<String, Object> param = Map.of("postHashtagId", postHashtagId);
+    public void delete(long postId, long hashtagId) {
+        String sql = "DELETE FROM post_hashtag WHERE post_id = :postId AND hashtag_id = :hashtagId";
+        Map<String, Object> param = Map.of("postId", postId, "hashtagId", hashtagId);
         template.update(sql, param);
     }
 
     @Override
-    public void delete(Long postId, Long memberId) {
-        String sql = "DELETE * FROM post_hashtag WHERE post_id=:postId AND member_id=:memberId";
-        SqlParameterSource source = new MapSqlParameterSource()
-                .addValue("postId", postId)
-                .addValue("memberId", memberId);
-        template.update(sql, source);
+    public boolean existsByKeys(long postId, long hashtagId) {
+        String sql = "SELECT COUNT(*) FROM post_hashtag WHERE post_id = :postId AND hashtag_id = :hashtagId";
+        Map<String, Object> param = Map.of("postId", postId, "hashtagId", hashtagId);
+        return template.queryForObject(sql, param, Integer.class) == 1;
     }
 
     private RowMapper<PostHashtag> tagPostRowMapper() {

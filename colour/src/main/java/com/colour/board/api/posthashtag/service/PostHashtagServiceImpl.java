@@ -1,7 +1,7 @@
 package com.colour.board.api.posthashtag.service;
 
-import com.colour.board.api.posthashtag.dto.PostHashtagDto;
-import com.colour.board.api.posthashtag.entity.PostHashtag;
+import com.colour.board.api.posthashtag.domain.dto.PostHashtagDto;
+import com.colour.board.api.posthashtag.domain.entity.PostHashtag;
 import com.colour.board.api.posthashtag.repository.PostHashtagRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -19,8 +19,8 @@ public class PostHashtagServiceImpl implements PostHashtagService {
     }
 
     @Override
-    public PostHashtag save(PostHashtag postHashtag) {
-        return repository.save(postHashtag);
+    public void create(PostHashtag postHashtag) {
+        repository.save(postHashtag);
     }
 
     @Override
@@ -29,12 +29,12 @@ public class PostHashtagServiceImpl implements PostHashtagService {
     }
 
     @Override
-    public void delete(Long postHashtagId) {
-        repository.delete(postHashtagId);
+    public void delete(long postId, long hashtagId) {
+        repository.delete(postId, hashtagId);
     }
 
     @Override
-    public void delete(Long postId, Long memberId) {
-        repository.delete(postId, memberId);
+    public boolean isPostHashtagExist(long postId, long hashtagId) {
+        return repository.existsByKeys(postId, hashtagId);
     }
 }
