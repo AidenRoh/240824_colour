@@ -1,7 +1,7 @@
 package com.colour.board.api.post.repository;
 
-import com.colour.board.api.post.dto.PostDto;
-import com.colour.board.api.post.entity.Post;
+import com.colour.board.api.post.domain.dto.PostDto;
+import com.colour.board.api.post.domain.entity.Post;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.RowMapper;
@@ -15,7 +15,6 @@ import javax.sql.DataSource;
 import java.sql.Timestamp;
 import java.util.*;
 
-import static org.springframework.util.CollectionUtils.isEmpty;
 import static org.springframework.util.StringUtils.hasText;
 
 /*
@@ -48,8 +47,8 @@ public class PostJdbcRepository implements PostRepository {
 
     @Override
     public Optional<Post> findById(Long postId) {
-        String sql = "SELECT post_id, writer, title, content, color_palette," +
-                " member_likes, created_at, updated_at, deleted_at FROM post WHERE post_id = :id";
+        String sql = "SELECT post_id, member_id, title, content, member_likes," +
+                " created_at, updated_at, deleted_at FROM post WHERE post_id = :id";
         try {
             Map<String, Object> param = Map.of("id", postId);
             Post post = template.queryForObject(sql, param, postRowMapper());
@@ -89,15 +88,6 @@ public class PostJdbcRepository implements PostRepository {
             andFlag = true;
         }
 
-        if (isEmpty(dto.getColors())) {
-            if (andFlag) {
-                sql += ", ";
-            }
-            sql += "color_palette=:colorPalette";
-            param.put("colorPalette", dto.getColors().toString());
-            andFlag = true;
-        }
-
         if (andFlag) {
             sql += ", ";
         }
@@ -119,14 +109,21 @@ public class PostJdbcRepository implements PostRepository {
 
     @Override
     public void likePost(Long postId) {
-        String sql = "UPDATE post SET member_likes = member_likes+1 WHERE post_id = :postId";
+        String sql = "UPDATE post SET likes = post.likes+1 WHERE post_id = :postId";
         Map<String, Object> param = Map.of("postId", postId);
         template.update(sql, param);
     }
 
     @Override
     public void dislikePost(Long postId) {
-        String sql = "UPDATE post SET member_likes = member_likes-1 WHERE post_id = :postId";
+        String sql = "UPDATE post SET likes = post.likes-1 WHERE post_id = :postId";
+        Map<String, Object> param = Map.of("postId", postId);
+        template.update(sql, param);
+    }
+
+    @Override
+    public void increaseViews(Long postId) {
+        String sql = "UPDATE post SET views = post.views+1 WHERE post_id = :postId";
         Map<String, Object> param = Map.of("postId", postId);
         template.update(sql, param);
     }

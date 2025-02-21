@@ -1,7 +1,7 @@
 package com.colour.board.api.post.repository;
 
-import com.colour.board.api.post.dto.PostDto;
-import com.colour.board.api.post.entity.Post;
+import com.colour.board.api.post.domain.dto.PostDto;
+import com.colour.board.api.post.domain.entity.Post;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
@@ -23,4 +23,6 @@ public interface PostRepository {
     void likePost(Long postId);
 
     void dislikePost(Long postId);
+
+    void increaseViews(Long postId);
 }
