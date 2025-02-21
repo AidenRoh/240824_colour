@@ -9,9 +9,6 @@ public class Follow {
     private Long followeeId;
 
     public Follow(Long followerId, Long followeeId) {
-        if (followerId == followeeId) {
-            throw new IllegalArgumentException("You cannot follow yourself");
-        }
         this.followerId = followerId;
         this.followeeId = followeeId;
     }

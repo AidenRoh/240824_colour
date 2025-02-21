@@ -18,7 +18,14 @@ public class FollowServiceImpl implements FollowService {
 
     @Override
     public void followUser(FollowDto followDto) {
-        Follow follow = new Follow(followDto.getFollowerId(), followDto.getFolloweeId());
+        Long followerId = followDto.getFollowerId();
+        Long followeeId = followDto.getFolloweeId();
+
+        if (followerId.equals(followeeId)) {
+            throw new IllegalArgumentException("You cannot follow yourself");
+        }
+
+        Follow follow = new Follow(followerId, followeeId);
         repository.follow(follow);
     }
 
