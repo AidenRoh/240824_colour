@@ -1,8 +1,8 @@
 package com.colour.comment.controller;
 
-import com.colour.comment.dto.ResponseRegisterDto;
-import com.colour.comment.dto.ResponseUpdateDto;
-import com.colour.comment.entity.Comment;
+import com.colour.comment.domain.dto.ResponseRegisterDto;
+import com.colour.comment.domain.dto.ResponseUpdateDto;
+import com.colour.comment.domain.entity.Comment;
 import com.colour.comment.service.ResponseService;
 import com.colour.member.service.MemberService;
 import lombok.RequiredArgsConstructor;

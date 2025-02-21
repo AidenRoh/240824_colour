@@ -1,11 +1,11 @@
-package com.colour.comment.dto;
+package com.colour.comment.domain.dto;
 
 import lombok.Getter;
 import lombok.Setter;
 
 @Getter
 @Setter
-public class ResponseSearchCond {
+public class ResponseRegisterDto {
 
     private String comment;
 }

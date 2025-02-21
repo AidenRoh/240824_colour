@@ -24,10 +24,9 @@ public class MemberServiceImpl implements MemberService {
 
     @Override
     public Member registerMember(MemberRegisterDto dto) {
-        String encodedPassword = passwordEncoder.encode(dto.getPassword());
-        dto.setPassword(encodedPassword);
-        Member member = mapper.memberRegisterDtoToEntity(dto);
-        return repository.create(member);
+        MemberRegisterDto memberDto = encodeDto(dto);
+        Member member = mapper.memberRegisterDtoToEntity(memberDto);
+        return repository.save(member);
     }
 
     @Override
@@ -60,7 +59,7 @@ public class MemberServiceImpl implements MemberService {
         return repository.existsByEmail(email);
     }
 
-    private MemberRegisterDto passwordEncoder(MemberRegisterDto dto) {
+    private MemberRegisterDto encodeDto(MemberRegisterDto dto) {
         String encodingPassword = passwordEncoder.encode(dto.getPassword());
         dto.setPassword(encodingPassword);
         return dto;

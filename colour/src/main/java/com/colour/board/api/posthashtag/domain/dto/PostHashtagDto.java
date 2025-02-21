@@ -1,4 +1,4 @@
-package com.colour.board.api.posthashtag.dto;
+package com.colour.board.api.posthashtag.domain.dto;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -6,7 +6,7 @@ import lombok.Setter;
 @Getter
 @Setter
 public class PostHashtagDto {
-    private Long tagId;
+    private Long hashtagId;
     private Long postId;
     private Long memberId;
 }

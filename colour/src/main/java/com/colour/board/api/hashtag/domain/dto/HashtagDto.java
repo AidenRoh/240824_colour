@@ -1,10 +1,10 @@
-package com.colour.board.api.hashtag.dto;
+package com.colour.board.api.hashtag.domain.dto;
 
 import lombok.Getter;
 import lombok.Setter;
 
 @Getter
 @Setter
-public class HashtagVo {
+public class HashtagDto {
     private String hashtag;
 }

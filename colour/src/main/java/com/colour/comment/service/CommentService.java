@@ -1,9 +1,9 @@
 package com.colour.comment.service;
 
-import com.colour.comment.dto.ResponseSearchCond;
-import com.colour.comment.dto.ResponseUpdateDto;
-import com.colour.comment.entity.Comment;
-import com.colour.comment.entity.Response;
+import com.colour.comment.domain.dto.ResponseSearchCond;
+import com.colour.comment.domain.dto.ResponseUpdateDto;
+import com.colour.comment.domain.entity.Comment;
+import com.colour.comment.domain.entity.Response;
 import com.colour.comment.repository.ResponseRepository;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;

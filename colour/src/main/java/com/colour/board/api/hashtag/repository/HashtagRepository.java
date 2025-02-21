@@ -1,6 +1,6 @@
 package com.colour.board.api.hashtag.repository;
 
-import com.colour.board.api.hashtag.entity.Hashtag;
+import com.colour.board.api.hashtag.domain.entity.Hashtag;
 import org.springframework.stereotype.Repository;
 
 import java.util.Optional;

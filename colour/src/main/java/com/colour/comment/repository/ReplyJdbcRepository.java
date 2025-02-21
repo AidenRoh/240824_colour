@@ -1,9 +1,9 @@
 package com.colour.comment.repository;
 
-import com.colour.comment.dto.ResponseSearchCond;
-import com.colour.comment.dto.ResponseUpdateDto;
-import com.colour.comment.entity.Reply;
-import com.colour.comment.entity.Response;
+import com.colour.comment.domain.dto.ResponseSearchCond;
+import com.colour.comment.domain.dto.ResponseUpdateDto;
+import com.colour.comment.domain.entity.Reply;
+import com.colour.comment.domain.entity.Response;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.RowMapper;
@@ -34,10 +34,10 @@ public class ReplyJdbcRepository implements ResponseRepository {
 
     @Override
     public Response save(Response reply) {
-         SqlParameterSource source = new BeanPropertySqlParameterSource(reply);
-         Number key = insert.executeAndReturnKey(source);
-         ((Reply) reply).setReplyId(key.longValue());
-         return reply;
+        SqlParameterSource source = new BeanPropertySqlParameterSource(reply);
+        Number key = insert.executeAndReturnKey(source);
+        ((Reply) reply).setReplyId(key.longValue());
+        return reply;
     }
 
     @Override

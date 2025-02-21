@@ -38,7 +38,7 @@ public class MemberJdbcRepository implements MemberRepository {
     }
 
     @Override
-    public Member create(Member member) {
+    public Member save(Member member) {
 //        String sql = "INSERT INTO member (username, email, password) " +
 //                "VALUES(:username, :email, :password)";
 //

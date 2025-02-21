@@ -1,4 +1,4 @@
-package com.colour.board.api.posthashtag.entity;
+package com.colour.board.api.posthashtag.domain.entity;
 
 import lombok.Data;
 

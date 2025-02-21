@@ -1,19 +1,19 @@
 package com.colour.board.api.hashtag.service;
 
-import com.colour.board.api.hashtag.dto.HashtagVo;
-import com.colour.board.api.hashtag.entity.Hashtag;
+import com.colour.board.api.hashtag.domain.dto.HashtagDto;
+import com.colour.board.api.hashtag.domain.entity.Hashtag;
 
 import java.util.List;
 
 public interface HashtagService {
 
-    Hashtag save(Hashtag hashtag);
+    Hashtag createHashtag(Hashtag hashtag);
 
-    Hashtag findById(Long tagId);
+    Hashtag findById(Long hashtagId);
 
-    Hashtag findByTag(String tagName);
+    Hashtag findByTag(String hashtagName);
 
-    List<Hashtag> findByCond(HashtagVo cond);
+    List<Hashtag> findByCond(HashtagDto cond);
 
-    void delete(Long tagId);
+    void deleteHashtag(Long hashtagId);
 }

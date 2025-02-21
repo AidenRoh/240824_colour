@@ -1,7 +1,7 @@
 package com.colour.board.api.hashtag.service;
 
-import com.colour.board.api.hashtag.dto.HashtagVo;
-import com.colour.board.api.hashtag.entity.Hashtag;
+import com.colour.board.api.hashtag.domain.dto.HashtagDto;
+import com.colour.board.api.hashtag.domain.entity.Hashtag;
 import com.colour.board.api.hashtag.repository.HashtagRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -19,7 +19,7 @@ public class HashtagServiceImpl implements HashtagService {
     }
 
     @Override
-    public Hashtag save(Hashtag hashtag) {
+    public Hashtag createHashtag(Hashtag hashtag) {
         Hashtag tag = findByTag(hashtag.getHashtag());
         if (tag != null) {
             repository.tagUp(tag.getHashtagId());
@@ -29,25 +29,25 @@ public class HashtagServiceImpl implements HashtagService {
     }
 
     @Override
-    public Hashtag findById(Long tagId) {
-        return repository.findById(tagId).orElse(null);
+    public Hashtag findById(Long hashtagId) {
+        return repository.findById(hashtagId).orElse(null);
     }
 
     @Override
-    public Hashtag findByTag(String tagName) {
-        return repository.findByTag(tagName).orElse(null);
+    public Hashtag findByTag(String hashtagName) {
+        return repository.findByTag(hashtagName).orElse(null);
     }
 
     @Override
-    public List<Hashtag> findByCond(HashtagVo cond) {
+    public List<Hashtag> findByCond(HashtagDto cond) {
         return List.of();
     }
 
     @Override
-    public void delete(Long tagId) {
-        Hashtag tag = findById(tagId);
+    public void deleteHashtag(Long hashtagId) {
+        Hashtag tag = findById(hashtagId);
         if (tag.getTagFrequency() > 1) {
-            repository.tagDown(tagId);
-        } else repository.delete(tagId);
+            repository.tagDown(hashtagId);
+        } else repository.delete(hashtagId);
     }
 }

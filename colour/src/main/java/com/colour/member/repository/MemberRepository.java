@@ -11,11 +11,17 @@ import java.util.Optional;
 @Repository
 public interface MemberRepository {
 
-    Member create(Member member);
+    Member save(Member member);
+
     Optional<Member> findById(Long memberId);
+
     List<Member> findAll(MemberSearchCond memberSearchCond);
+
     Member findByEmail(String email);
+
     void update(Long memberId, MemberUpdateDto updateDto);
+
     void delete(Long memberId);
+
     boolean existsByEmail(String email);
 }

@@ -1,6 +1,6 @@
 package com.colour.board.api.hashtag.repository;
 
-import com.colour.board.api.hashtag.entity.Hashtag;
+import com.colour.board.api.hashtag.domain.entity.Hashtag;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.RowMapper;
@@ -35,14 +35,14 @@ public class HashtagJdbcRepository implements HashtagRepository {
 
     @Override
     public void tagUp(Long hashtagId) {
-        String sql = "UPDATE hashtag SET tag_frequency= hashtag.tag_frequency + 1 WHERE hashtag_id=:hashtagId";
+        String sql = "UPDATE hashtag SET tag_frequency = hashtag.tag_frequency + 1 WHERE hashtag_id=:hashtagId";
         Map<String, Object> param = Map.of("hashtagId", hashtagId);
         template.update(sql, param);
     }
 
     @Override
     public void tagDown(Long hashtagId) {
-        String sql = "UPDATE hashtag SET tag_frequency= hashtag.tag_frequency - 1 WHERE hashtag_id=:hashtagId";
+        String sql = "UPDATE hashtag SET tag_frequency = hashtag.tag_frequency - 1 WHERE hashtag_id=:hashtagId";
         Map<String, Object> param = Map.of("hashtagId", hashtagId);
         template.update(sql, param);
     }

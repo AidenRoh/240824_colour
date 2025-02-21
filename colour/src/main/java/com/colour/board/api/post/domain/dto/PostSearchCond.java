@@ -1,4 +1,4 @@
-package com.colour.board.api.post.dto;
+package com.colour.board.api.post.domain.dto;
 
 import lombok.Getter;
 import lombok.Setter;

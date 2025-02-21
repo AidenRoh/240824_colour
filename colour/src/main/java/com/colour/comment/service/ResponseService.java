@@ -1,8 +1,8 @@
 package com.colour.comment.service;
 
-import com.colour.comment.dto.ResponseSearchCond;
-import com.colour.comment.dto.ResponseUpdateDto;
-import com.colour.comment.entity.Response;
+import com.colour.comment.domain.dto.ResponseSearchCond;
+import com.colour.comment.domain.dto.ResponseUpdateDto;
+import com.colour.comment.domain.entity.Response;
 
 import java.util.List;
 
