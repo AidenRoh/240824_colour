@@ -8,6 +8,9 @@ import com.colour.board.api.colorpalette.util.Saturation;
 import com.colour.board.api.colorpalette.util.ZoneSystem;
 
 import java.awt.*;
+import java.util.List;
+import java.util.Locale;
+import java.util.Optional;
 
 public abstract class AbstractColorService {
 
@@ -17,21 +20,20 @@ public abstract class AbstractColorService {
 
     public abstract HexColor createColor(HexColor color);
 
-    public abstract HexColor findColorByHex(String hexColor);
+    public abstract Optional<HexColor> findColorByHex(String hexColor);
 
-    public abstract HexColor findColorByCond(ColorCond colorCond);
+    public abstract List<HexColor> findColorByCond(ColorCond colorCond);
 
     public abstract void deleteColor(Long colorId);
 
     public static HexColor of(ColorDto colorDto) {
-        String hexColor = colorDto.getHexColor();
-        Color hex = Color.decode(hexColor);
-        float[] hsb = Color.RGBtoHSB(hex.getRed(), hex.getGreen(), hex.getBlue(), null);
-
-        return new HexColor(hexColor,
+        String hexKey = colorDto.getHexColor().toUpperCase(Locale.ROOT);
+        Color hexColor = Color.decode(hexKey);
+        float[] hsb = Color.RGBtoHSB(hexColor.getRed(), hexColor.getGreen(), hexColor.getBlue(), null);
+        return new HexColor(hexKey,
                 Color12Sections.classify(getHue(hsb)),
                 Saturation.classify(getSaturation(hsb)),
-                ZoneSystem.classify(getLuminance(hex))
+                ZoneSystem.classify(getLuminance(hexColor))
         );
     }
 
@@ -44,10 +46,8 @@ public abstract class AbstractColorService {
     }
 
     private static int getLuminance(Color color) {
-        return Math.round(
-                REC_709_RED_COEFFICIENT * color.getRed() +
-                        REC_709_GREEN_COEFFICIENT * color.getGreen() +
-                        REC_709_BLUE_COEFFICIENT * color.getBlue()
-        );
+        return Math.round(REC_709_RED_COEFFICIENT * color.getRed() +
+                REC_709_GREEN_COEFFICIENT * color.getGreen() +
+                REC_709_BLUE_COEFFICIENT * color.getBlue());
     }
 }
