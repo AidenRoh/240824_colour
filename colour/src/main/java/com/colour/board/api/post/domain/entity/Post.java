@@ -22,20 +22,12 @@ public class Post {
     private Timestamp updatedAt;
     private Timestamp deletedAt;
 
-    public Post(long memberId, String title, String content) {
+    public Post(long memberId) {
         this.memberId = memberId;
-        this.title = title;
-        this.content = content;
         this.likes = DEFAULT_VALUE;
         this.views = DEFAULT_VALUE;
-        this.status = PostStatus.POSTED.getStatus();
+        this.status = PostStatus.TEMPORARY.getStatus();
         this.createdAt = new Timestamp(new Date().getTime());
-    }
-
-    public static Post createTemporary(long memberId) {
-        Post temporary = new Post(memberId, null, null);
-        temporary.setStatus(PostStatus.TEMPORARY.getStatus());
-        return temporary;
     }
 
     public Post() {

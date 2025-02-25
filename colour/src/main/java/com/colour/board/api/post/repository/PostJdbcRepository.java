@@ -47,8 +47,7 @@ public class PostJdbcRepository implements PostRepository {
 
     @Override
     public Optional<Post> findById(Long postId) {
-        String sql = "SELECT post_id, member_id, title, content, member_likes," +
-                " created_at, updated_at, deleted_at FROM post WHERE post_id = :id";
+        String sql = "SELECT * FROM post WHERE post_id = :id";
         try {
             Map<String, Object> param = Map.of("id", postId);
             Post post = template.queryForObject(sql, param, postRowMapper());
@@ -69,40 +68,40 @@ public class PostJdbcRepository implements PostRepository {
 
     @Override
     public void update(Long postId, PostDto dto) {
-        Map<String, Object> param = new HashMap<>();
-        boolean andFlag = false;
-        String sql = "UPDATE post SET ";
+        Map<String, Object> params = new HashMap<>();
+        StringBuilder sql = new StringBuilder("UPDATE post SET ");
+        String prefix = "";
 
         if (hasText(dto.getTitle())) {
-            sql += "title=:title";
-            param.put("title", dto.getTitle());
-            andFlag = true;
+            sql.append("title=:title");
+            params.put("title", dto.getTitle());
+            prefix = ", ";
         }
 
         if (hasText(dto.getContent())) {
-            if (andFlag) {
-                sql += ", ";
-            }
-            sql += "content=:content";
-            param.put("content", dto.getContent());
-            andFlag = true;
+            sql.append(prefix).append("content=:content");
+            params.put("content", dto.getContent());
+            prefix = ", ";
         }
 
-        if (andFlag) {
-            sql += ", ";
+        if (hasText(dto.getStatus())) {
+            sql.append(prefix).append("status=:status");
+            params.put("status", dto.getStatus());
+            prefix = ", ";
         }
 
-        sql += "updated_at=:updatedAt WHERE post_id=:id";
-        param.put("id", postId);
-        param.put("updatedAt", new Timestamp(new Date().getTime()));
-        template.update(sql, param);
+        sql.append(prefix).append("updated_at=:updatedAt WHERE post_id=:postId");
+        params.put("postId", postId);
+        params.put("updatedAt", new Timestamp(new Date().getTime()));
+        template.update(sql.toString(), params);
     }
 
     @Override
-    public void delete(Long postId) {
-        String sql = "UPDATE post SET deleted_at=:deletedAt WHERE post_id=:id";
+    public void delete(Long postId, PostDto dto) {
+        String sql = "UPDATE post SET status=:status, deleted_at=:deletedAt WHERE post_id=:id";
         SqlParameterSource param = new MapSqlParameterSource()
                 .addValue("id", postId)
+                .addValue("status", dto.getStatus())
                 .addValue("deletedAt", new Timestamp(new Date().getTime()));
         template.update(sql, param);
     }

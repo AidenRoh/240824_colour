@@ -5,12 +5,12 @@ import com.colour.board.api.posthashtag.domain.entity.PostHashtag;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.namedparam.BeanPropertySqlParameterSource;
-import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.jdbc.core.namedparam.SqlParameterSource;
 import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 
 import javax.sql.DataSource;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -33,29 +33,22 @@ public class PostHashtagJdbcRepository implements PostHashtagRepository {
 
     @Override
     public List<PostHashtag> findByCond(PostHashtagDto postHashtagDto) {
-        String sql = "SELECT * FROM tag_post WHERE";
-        boolean andFlag = false;
+        Map<String, Object> params = new HashMap<>();
+        StringBuilder sql = new StringBuilder("SELECT * FROM post_hashtag WHERE 1=1");
+
         if (postHashtagDto.getHashtagId() != null) {
-            sql += " hashtag_id = :hashtagId";
-            andFlag = true;
+            sql.append(" AND hashtag_id = :hashtagId");
+            params.put("hashtagId", postHashtagDto.getHashtagId());
         }
         if (postHashtagDto.getPostId() != null) {
-            if (andFlag) {
-                sql += " AND ";
-            }
-            sql += " post_id = :postId";
+            sql.append(" AND post_id = :postId");
+            params.put("postId", postHashtagDto.getPostId());
         }
         if (postHashtagDto.getMemberId() != null) {
-            if (andFlag) {
-                sql += " AND ";
-            }
-            sql += " member_id = :memberId";
+            sql.append(" AND member_id = :memberId");
+            params.put("memberId", postHashtagDto.getMemberId());
         }
-        SqlParameterSource params = new MapSqlParameterSource()
-                .addValue("hashtagId", postHashtagDto.getHashtagId())
-                .addValue("postId", postHashtagDto.getPostId())
-                .addValue("memberId", postHashtagDto.getMemberId());
-        return template.query(sql, params, tagPostRowMapper());
+        return template.query(sql.toString(), params, tagPostRowMapper());
     }
 
     @Override

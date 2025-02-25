@@ -7,7 +7,7 @@ import java.util.List;
 
 public interface PostService {
 
-    Post createPost(Post post);
+    Post createTemporaryPost(Post post);
 
     void updatePost(Long postId, PostDto dto, long memberId);
 
