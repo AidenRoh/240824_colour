@@ -1,4 +1,4 @@
-package com.colour.comment.domain.dto;
+package com.colour.board.api.comment.domain.dto;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -7,5 +7,5 @@ import lombok.Setter;
 @Setter
 public class ResponseSearchCond {
 
-    private String comment;
+    private String content;
 }

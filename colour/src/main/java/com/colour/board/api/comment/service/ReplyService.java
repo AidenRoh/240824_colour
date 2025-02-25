@@ -1,10 +1,10 @@
-package com.colour.comment.service;
+package com.colour.board.api.comment.service;
 
-import com.colour.comment.domain.dto.ResponseSearchCond;
-import com.colour.comment.domain.dto.ResponseUpdateDto;
-import com.colour.comment.domain.entity.Comment;
-import com.colour.comment.domain.entity.Response;
-import com.colour.comment.repository.ResponseRepository;
+import com.colour.board.api.comment.domain.dto.ResponseSearchCond;
+import com.colour.board.api.comment.domain.dto.ResponseUpdateDto;
+import com.colour.board.api.comment.domain.entity.Comment;
+import com.colour.board.api.comment.domain.entity.Response;
+import com.colour.board.api.comment.repository.ResponseRepository;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -14,22 +14,22 @@ import java.util.Objects;
 
 @Service
 @Transactional
-public class CommentService implements ResponseService {
+public class ReplyService implements ResponseService {
 
     private final ResponseRepository repository;
 
-    public CommentService(@Qualifier("commentRepository") ResponseRepository repository) {
+    public ReplyService(@Qualifier("replyRepository") ResponseRepository repository) {
         this.repository = repository;
     }
 
     @Override
-    public Response save(Response comment) {
-        return repository.save(comment);
+    public Response save(Response reply) {
+        return repository.save(reply);
     }
 
     @Override
-    public Response findResponseById(Long commentId) {
-        return repository.findById(commentId).orElse(null);
+    public Response findResponseById(Long replyId) {
+        return repository.findById(replyId).orElse(null);
     }
 
     @Override

@@ -1,9 +1,9 @@
-package com.colour.comment.repository;
+package com.colour.board.api.comment.repository;
 
-import com.colour.comment.domain.dto.ResponseSearchCond;
-import com.colour.comment.domain.dto.ResponseUpdateDto;
-import com.colour.comment.domain.entity.Comment;
-import com.colour.comment.domain.entity.Response;
+import com.colour.board.api.comment.domain.dto.ResponseSearchCond;
+import com.colour.board.api.comment.domain.dto.ResponseUpdateDto;
+import com.colour.board.api.comment.domain.entity.Comment;
+import com.colour.board.api.comment.domain.entity.Response;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.RowMapper;
@@ -42,7 +42,7 @@ public class CommentJdbcRepository implements ResponseRepository {
 
     @Override
     public Optional<Response> findById(Long commentId) {
-        String sql = "SELECT comment_id, board_id, member_id, writer, comment, created_at, updated_at, deleted_at FROM comment WHERE comment_id=:id";
+        String sql = "SELECT comment_id, board_id, member_id, content, created_at, updated_at, deleted_at FROM comment WHERE comment_id=:id";
         try {
             Map<String, Object> param = Map.of("id", commentId);
             Comment comment = template.queryForObject(sql, param, commentRowMapper());
@@ -63,7 +63,7 @@ public class CommentJdbcRepository implements ResponseRepository {
         String sql = "UPDATE comment SET comment=:comment, updated_at=:updatedAt WHERE comment_id=:id";
         SqlParameterSource source = new MapSqlParameterSource()
                 .addValue("id", commentId)
-                .addValue("comment", dto.getComment())
+                .addValue("comment", dto.getContent())
                 .addValue("updatedAt", new Timestamp(new Date().getTime()));
         template.update(sql, source);
     }

@@ -1,4 +1,4 @@
-package com.colour.comment.domain.entity;
+package com.colour.board.api.comment.domain.entity;
 
 import lombok.Data;
 
@@ -11,17 +11,15 @@ public class Reply implements Response {
     private Long replyId;
     private Long commentId;
     private Long memberId;
-    private String writer;
-    private String comment;
+    private String content;
     private Timestamp createdAt;
     private Timestamp updatedAt;
     private Timestamp deletedAt;
 
-    public Reply(Long commentId, Long memberId, String writer, String comment) {
+    public Reply(Long commentId, Long memberId, String content) {
         this.commentId = commentId;
         this.memberId = memberId;
-        this.writer = writer;
-        this.comment = comment;
+        this.content = content;
         this.createdAt = new Timestamp(new Date().getTime());
     }
 

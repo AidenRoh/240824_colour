@@ -1,9 +1,9 @@
-package com.colour.comment.controller;
+package com.colour.board.controller;
 
-import com.colour.comment.domain.dto.ResponseRegisterDto;
-import com.colour.comment.domain.dto.ResponseUpdateDto;
-import com.colour.comment.domain.entity.Comment;
-import com.colour.comment.service.ResponseService;
+import com.colour.board.api.comment.domain.dto.ResponseRegisterDto;
+import com.colour.board.api.comment.domain.dto.ResponseUpdateDto;
+import com.colour.board.api.comment.domain.entity.Comment;
+import com.colour.board.api.comment.service.ResponseService;
 import com.colour.member.service.MemberService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -35,9 +35,7 @@ public class CommentController {
     @PostMapping("/{boardId}/create")
     public ResponseEntity<String> createComment(@RequestBody ResponseRegisterDto dto,
                                                 @PathVariable Long boardId) {
-        long memberId = getCurrentMemberId();
-        String writer = memberService.findMemberById(memberId).getUsername();
-        Comment comment = new Comment(boardId, memberId, writer, dto.getComment());
+        Comment comment = new Comment(boardId, getCurrentMemberId(), dto.getContent());
         commentService.save(comment);
         return ResponseEntity.status(HttpStatus.CREATED).body("ok");
     }
