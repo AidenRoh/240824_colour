@@ -34,10 +34,10 @@ public class HashtagJdbcRepository implements HashtagRepository {
     }
 
     @Override
-    public void tagUp(Long hashtagId) {
+    public Hashtag tagUp(Long hashtagId) {
         String sql = "UPDATE hashtag SET tag_frequency = hashtag.tag_frequency + 1 WHERE hashtag_id=:hashtagId";
         Map<String, Object> param = Map.of("hashtagId", hashtagId);
-        template.update(sql, param);
+        return template.queryForObject(sql, param, hashtagRowMapper());
     }
 
     @Override

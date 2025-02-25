@@ -15,9 +15,9 @@ public interface MemberRepository {
 
     Optional<Member> findById(Long memberId);
 
-    List<Member> findAll(MemberSearchCond memberSearchCond);
+    Optional<Member> findByEmail(String email);
 
-    Member findByEmail(String email);
+    List<Member> findAll(MemberSearchCond memberSearchCond);
 
     void update(Long memberId, MemberUpdateDto updateDto);
 

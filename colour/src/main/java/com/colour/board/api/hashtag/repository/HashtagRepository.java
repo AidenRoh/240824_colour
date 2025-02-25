@@ -10,7 +10,7 @@ public interface HashtagRepository {
 
     Hashtag save(Hashtag hashtag);
 
-    void tagUp(Long tagId);
+    Hashtag tagUp(Long tagId);
 
     void tagDown(Long tagId);
 

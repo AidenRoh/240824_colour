@@ -95,10 +95,16 @@ public class MemberJdbcRepository implements MemberRepository {
     }
 
     @Override
-    public Member findByEmail(String email) {
+    public Optional<Member> findByEmail(String email) {
         String sql = "SELECT * FROM member WHERE email = :email";
         Map<String, Object> param = Map.of("email", email);
-        return template.queryForObject(sql, param, memberRowMapper());
+        try {
+            Member member = template.queryForObject(sql, param, memberRowMapper());
+            assert member != null;
+            return Optional.of(member);
+        } catch (EmptyResultDataAccessException e) {
+            return Optional.empty();
+        }
     }
 
     @Override
@@ -117,8 +123,7 @@ public class MemberJdbcRepository implements MemberRepository {
     public boolean existsByEmail(String email) {
         String sql = "SELECT count(*) FROM member WHERE email = :email";
         Map<String, Object> param = Map.of("email", email);
-        Long count = template.queryForObject(sql, param, Long.class);
-        return count > 0;
+        return template.queryForObject(sql, param, Long.class) == 1;
     }
 
     private RowMapper<Member> memberRowMapper() {
