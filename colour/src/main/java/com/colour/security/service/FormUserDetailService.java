@@ -24,11 +24,9 @@ public class FormUserDetailService implements UserDetailsService {
 
     @Override
     public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
-        Member findMember = repository.findByEmail(email);
+        Member findMember = repository.findByEmail(email).orElse(null);
         if (findMember == null) {
-            if (repository.existsByEmail(email)) {
-                throw new UsernameNotFoundException("No user found with this email: " + email);
-            }
+            throw new UsernameNotFoundException("No user found with this email: " + email);
         }
 
         List<GrantedAuthority> authorities = List.of(new SimpleGrantedAuthority(findMember.getRole()));
