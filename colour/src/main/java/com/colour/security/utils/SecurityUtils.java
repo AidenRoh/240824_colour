@@ -1,13 +1,11 @@
 package com.colour.security.utils;
 
 import com.colour.member.domain.dto.MemberSecurityDto;
-import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
 
 @Component
-@RequiredArgsConstructor
 public class SecurityUtils {
 
     public static Long getCurrentMemberId() {
