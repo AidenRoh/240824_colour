@@ -2,7 +2,9 @@ package com.colour.board.controller;
 
 import com.colour.board.api.likes.domain.dto.LikesDto;
 import com.colour.board.api.post.domain.dto.PostDto;
+import com.colour.board.api.post.domain.entity.Post;
 import com.colour.board.facade.BoardFacadeService;
+import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -20,8 +22,9 @@ public class BoardController {
     //TODO: search 관련 로직 구현해야함
 
     @GetMapping("/create")
-    public ResponseEntity<String> createBoard() {
-        service.createTempBoard(getCurrentMemberId());
+    public ResponseEntity<String> createBoard(HttpServletRequest request) {
+        Post tempBoard = service.createTempBoard(getCurrentMemberId());
+        request.getSession().setAttribute("board", tempBoard.getPostId());
         return ResponseEntity.status(HttpStatus.OK).body("temporary board created");
     }
 
@@ -31,8 +34,9 @@ public class BoardController {
     }
 
     @PutMapping("/create")
-    public ResponseEntity<String> createBoard(@RequestBody PostDto dto) {
-        service.createBoard(dto, getCurrentMemberId());
+    public ResponseEntity<String> createBoard(@RequestBody PostDto dto, HttpServletRequest request) {
+        Long postId = (Long) request.getSession().getAttribute("board");
+        service.createBoard(dto, postId, getCurrentMemberId());
         return ResponseEntity.status(HttpStatus.CREATED).body("board created - done");
     }
 
@@ -56,7 +60,7 @@ public class BoardController {
     }
 
     @DeleteMapping("{boardId}/dislikePost")
-    public ResponseEntity<String> dislikePost(@RequestParam long boardId) {
+    public ResponseEntity<String> dislikePost(@PathVariable long boardId) {
         LikesDto dto = LikesDto.builder().postId(boardId).memberId(getCurrentMemberId()).build();
         service.dislikePost(dto);
         return ResponseEntity.status(HttpStatus.NO_CONTENT).body("unlike this post");

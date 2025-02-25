@@ -8,6 +8,7 @@ import com.colour.board.api.likes.domain.entity.Likes;
 import com.colour.board.api.likes.service.LikesService;
 import com.colour.board.api.post.domain.dto.PostDto;
 import com.colour.board.api.post.domain.entity.Post;
+import com.colour.board.api.post.domain.enums.PostStatus;
 import com.colour.board.api.post.service.PostService;
 import com.colour.board.api.posthashtag.domain.entity.PostHashtag;
 import com.colour.board.api.posthashtag.service.PostHashtagService;
@@ -32,12 +33,13 @@ public class BoardFacadeService {
     }
 
     //crud_board
-    public void createTempBoard(Long memberId) {
-        postService.createPost(Post.createTemporary(memberId));
+    public Post createTempBoard(Long memberId) {
+        return postService.createTemporaryPost(new Post(memberId));
     }
 
-    public void createBoard(PostDto dto, Long memberId) {
-        postService.createPost(new Post(memberId, dto.getTitle(), dto.getContent()));
+    public void createBoard(PostDto dto, Long postId, Long memberId) {
+        dto.setStatus(PostStatus.POSTED.getStatus());
+        postService.updatePost(postId, dto, memberId);
     }
 
     public void updateBoard(PostDto dto, Long postId, long memberId) {
