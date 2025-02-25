@@ -6,7 +6,8 @@ import lombok.Getter;
 public enum PostStatus {
     TEMPORARY("TEMPORARY"),
     POSTED("POSTED"),
-    INVISIBLE("INVISIBLE");
+    PRIVACY("PRIVACY"),
+    DELETED("DELETED");
 
     private final String status;
 

@@ -2,6 +2,7 @@ package com.colour.board.api.post.service;
 
 import com.colour.board.api.post.domain.dto.PostDto;
 import com.colour.board.api.post.domain.entity.Post;
+import com.colour.board.api.post.domain.enums.PostStatus;
 import com.colour.board.api.post.repository.PostRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -19,7 +20,7 @@ public class PostServiceImpl implements PostService {
     }
 
     @Override
-    public Post createPost(Post post) {
+    public Post createTemporaryPost(Post post) {
         return repository.save(post);
     }
 
@@ -33,7 +34,9 @@ public class PostServiceImpl implements PostService {
     @Override
     public void deletePost(Long postId, long memberId) {
         if (doesWriterRequest(postId, memberId)) {
-            repository.delete(postId);
+            PostDto dto = new PostDto();
+            dto.setStatus(PostStatus.DELETED.getStatus());
+            repository.delete(postId, dto);
         }
     }
 
