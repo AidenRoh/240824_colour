@@ -25,19 +25,15 @@ public class PostServiceImpl implements PostService {
     }
 
     @Override
-    public void updatePost(Long postId, PostDto dto, long memberId) {
-        if (doesWriterRequest(postId, memberId)) {
-            repository.update(postId, dto);
-        }
+    public void updatePost(Long postId, PostDto dto) {
+        repository.update(postId, dto);
     }
 
     @Override
-    public void deletePost(Long postId, long memberId) {
-        if (doesWriterRequest(postId, memberId)) {
-            PostDto dto = new PostDto();
-            dto.setStatus(PostStatus.DELETED.getStatus());
-            repository.delete(postId, dto);
-        }
+    public void deletePost(Long postId) {
+        PostDto dto = new PostDto();
+        dto.setStatus(PostStatus.DELETED.getStatus());
+        repository.delete(postId, dto);
     }
 
     @Override
@@ -50,9 +46,4 @@ public class PostServiceImpl implements PostService {
         return repository.findByTitle(title);
     }
 
-    private boolean doesWriterRequest(long postId, long memberId) {
-        Post post = repository.findById(postId).orElse(null);
-        assert post != null;
-        return post.getMemberId() == memberId;
-    }
 }

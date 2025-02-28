@@ -1,8 +1,5 @@
 package com.colour.board.facade;
 
-import com.colour.board.api.hashtag.domain.dto.HashtagDto;
-import com.colour.board.api.hashtag.domain.entity.Hashtag;
-import com.colour.board.api.hashtag.service.HashtagService;
 import com.colour.board.api.likes.domain.dto.LikesDto;
 import com.colour.board.api.likes.domain.entity.Likes;
 import com.colour.board.api.likes.service.LikesService;
@@ -10,8 +7,7 @@ import com.colour.board.api.post.domain.dto.PostDto;
 import com.colour.board.api.post.domain.entity.Post;
 import com.colour.board.api.post.domain.enums.PostStatus;
 import com.colour.board.api.post.service.PostService;
-import com.colour.board.api.posthashtag.domain.entity.PostHashtag;
-import com.colour.board.api.posthashtag.service.PostHashtagService;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -20,15 +16,10 @@ import org.springframework.transaction.annotation.Transactional;
 public class BoardFacadeService {
 
     private final PostService postService;
-    private final HashtagService hashtagService;
-    private final PostHashtagService postHashtagService;
     private final LikesService likesService;
 
-    public BoardFacadeService(PostService postService, HashtagService hashtagService,
-                              PostHashtagService postHashtagService, LikesService likesService) {
+    public BoardFacadeService(PostService postService, LikesService likesService) {
         this.postService = postService;
-        this.hashtagService = hashtagService;
-        this.postHashtagService = postHashtagService;
         this.likesService = likesService;
     }
 
@@ -37,33 +28,20 @@ public class BoardFacadeService {
         return postService.createTemporaryPost(new Post(memberId));
     }
 
-    public void createBoard(PostDto dto, Long postId, Long memberId) {
+    @PreAuthorize("@postOwnerValidator.validatePostOwner(#postId)")
+    public void createBoard(PostDto dto, Long postId) {
         dto.setStatus(PostStatus.POSTED.getStatus());
-        postService.updatePost(postId, dto, memberId);
+        postService.updatePost(postId, dto);
     }
 
-    public void updateBoard(PostDto dto, Long postId, long memberId) {
-        postService.updatePost(postId, dto, memberId);
+    @PreAuthorize("@postOwnerValidator.validatePostOwner(#postId)")
+    public void updateBoard(PostDto dto, Long postId) {
+        postService.updatePost(postId, dto);
     }
 
-    public void deleteBoard(Long postId, long memberId) {
-        postService.deletePost(postId, memberId);
-    }
-
-    //hashtag
-    public void createHashtag(HashtagDto dto, long postId, long memberId) {
-        Hashtag hashtag = hashtagService.createHashtag(new Hashtag(dto.getHashtag()));
-        if (!postHashtagService.isPostHashtagExist(postId, hashtag.getHashtagId())) {
-            postHashtagService.create(new PostHashtag(hashtag.getHashtagId(), postId, memberId));
-        } else hashtagService.deleteHashtag(hashtag.getHashtagId());
-        // TODO: 이미 등록된 태그입니다.
-    }
-
-    public void deleteHashtag(long hashtagId, long postId) {
-        if (postHashtagService.isPostHashtagExist(postId, hashtagId)) {
-            postHashtagService.delete(postId, hashtagId);
-            hashtagService.deleteHashtag(hashtagId);
-        } else return; // TODO: 이미 삭제된 태그입니다.
+    @PreAuthorize("@postOwnerValidator.validatePostOwner(#postId)")
+    public void deleteBoard(Long postId) {
+        postService.deletePost(postId);
     }
 
     //likes

@@ -36,31 +36,31 @@ public class BoardController {
     @PutMapping("/create")
     public ResponseEntity<String> createBoard(@RequestBody PostDto dto, HttpServletRequest request) {
         Long postId = (Long) request.getSession().getAttribute("board");
-        service.createBoard(dto, postId, getCurrentMemberId());
+        service.createBoard(dto, postId);
         return ResponseEntity.status(HttpStatus.CREATED).body("board created - done");
     }
 
     @PatchMapping("/{boardId}/update")
     public ResponseEntity<String> updateBoard(@RequestBody PostDto dto, @PathVariable Long boardId) {
-        service.updateBoard(dto, boardId, getCurrentMemberId());
+        service.updateBoard(dto, boardId);
         return ResponseEntity.status(HttpStatus.OK).body("board updated - done");
     }
 
     @DeleteMapping("/{boardId}/delete")
     public ResponseEntity<String> deleteBoard(@PathVariable Long boardId) {
-        service.deleteBoard(boardId, getCurrentMemberId());
+        service.deleteBoard(boardId);
         return ResponseEntity.status(HttpStatus.NO_CONTENT).body("board deleted - done");
     }
 
-    @PostMapping("{boardId}/likePost")
-    public ResponseEntity<String> likePost(@PathVariable long boardId) {
+    @PostMapping("/{boardId}/likePost")
+    public ResponseEntity<String> likePost(@PathVariable Long boardId) {
         LikesDto dto = LikesDto.builder().postId(boardId).memberId(getCurrentMemberId()).build();
         service.likePost(dto);
         return ResponseEntity.status(HttpStatus.CREATED).body("like this post");
     }
 
-    @DeleteMapping("{boardId}/dislikePost")
-    public ResponseEntity<String> dislikePost(@PathVariable long boardId) {
+    @DeleteMapping("/{boardId}/dislikePost")
+    public ResponseEntity<String> dislikePost(@PathVariable Long boardId) {
         LikesDto dto = LikesDto.builder().postId(boardId).memberId(getCurrentMemberId()).build();
         service.dislikePost(dto);
         return ResponseEntity.status(HttpStatus.NO_CONTENT).body("unlike this post");
