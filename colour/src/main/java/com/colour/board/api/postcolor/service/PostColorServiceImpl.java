@@ -29,12 +29,12 @@ public class PostColorServiceImpl implements PostColorService {
     }
 
     @Override
-    public void delete(long postId, long colorId) {
+    public void delete(Long postId, Long colorId) {
         repository.delete(postId, colorId);
     }
 
     @Override
-    public boolean isPostColorExist(long postId, long colorId) {
+    public boolean isPostColorExist(Long postId, Long colorId) {
         return repository.existsByKeys(postId, colorId);
     }
 }

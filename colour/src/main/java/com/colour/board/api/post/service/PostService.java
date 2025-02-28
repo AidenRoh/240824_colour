@@ -9,9 +9,9 @@ public interface PostService {
 
     Post createTemporaryPost(Post post);
 
-    void updatePost(Long postId, PostDto dto, long memberId);
+    void updatePost(Long postId, PostDto dto);
 
-    void deletePost(Long postId, long memberId);
+    void deletePost(Long postId);
 
     Post findPostById(Long postId);
 

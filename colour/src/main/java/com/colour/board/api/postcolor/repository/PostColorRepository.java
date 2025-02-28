@@ -11,7 +11,7 @@ public interface PostColorRepository {
 
     List<PostColor> findByCond(PostColorDto postColorDto);
 
-    void delete(long postId, long colorId);
+    void delete(Long postId, Long colorId);
 
-    boolean existsByKeys(long postId, long colorId);
+    boolean existsByKeys(Long postId, Long colorId);
 }

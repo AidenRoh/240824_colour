@@ -11,7 +11,7 @@ public interface PostColorService {
 
     List<PostColor> findByCond(PostColorDto dto);
 
-    void delete(long postId, long colorId);
+    void delete(Long postId, Long colorId);
 
-    boolean isPostColorExist(long postId, long colorId);
+    boolean isPostColorExist(Long postId, Long colorId);
 }

@@ -8,12 +8,14 @@ import org.springframework.jdbc.core.namedparam.BeanPropertySqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.jdbc.core.namedparam.SqlParameterSource;
 import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
+import org.springframework.stereotype.Repository;
 
 import javax.sql.DataSource;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+@Repository
 public class PostColorJdbcRepository implements PostColorRepository {
 
     private final NamedParameterJdbcTemplate template;
@@ -38,12 +40,12 @@ public class PostColorJdbcRepository implements PostColorRepository {
         sql.append("SELECT * FROM post_color WHERE 1=1");
 
         if (postColorDto.getPostId() != null) {
-            sql.append(" AND post_id = postId");
+            sql.append(" AND post_id = :postId");
             params.put("postId", postColorDto.getPostId());
         }
 
         if (postColorDto.getColorId() != null) {
-            sql.append(" AND color_id = colorId");
+            sql.append(" AND color_id = :colorId");
             params.put("colorId", postColorDto.getColorId());
         }
 
@@ -51,14 +53,14 @@ public class PostColorJdbcRepository implements PostColorRepository {
     }
 
     @Override
-    public void delete(long postId, long colorId) {
+    public void delete(Long postId, Long colorId) {
         String sql = "DELETE FROM post_color WHERE post_id=:postId AND color_id=:colorId";
         Map<String, Object> params = Map.of("postId", postId, "colorId", colorId);
         template.update(sql, params);
     }
 
     @Override
-    public boolean existsByKeys(long postId, long colorId) {
+    public boolean existsByKeys(Long postId, Long colorId) {
         String sql = "SELECT COUNT(*) FROM post_color WHERE post_id=:postId AND color_id=:colorId";
         Map<String, Object> params = Map.of("postId", postId, "colorId", colorId);
         return template.queryForObject(sql, params, Integer.class) == 1;
