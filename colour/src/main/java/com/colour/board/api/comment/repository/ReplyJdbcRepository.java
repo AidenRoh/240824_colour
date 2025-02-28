@@ -1,7 +1,6 @@
 package com.colour.board.api.comment.repository;
 
-import com.colour.board.api.comment.domain.dto.ResponseSearchCond;
-import com.colour.board.api.comment.domain.dto.ResponseUpdateDto;
+import com.colour.board.api.comment.domain.dto.ResponseDto;
 import com.colour.board.api.comment.domain.entity.Reply;
 import com.colour.board.api.comment.domain.entity.Response;
 import org.springframework.dao.EmptyResultDataAccessException;
@@ -12,6 +11,7 @@ import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.jdbc.core.namedparam.SqlParameterSource;
 import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
+import org.springframework.stereotype.Repository;
 
 import javax.sql.DataSource;
 import java.sql.Timestamp;
@@ -20,6 +20,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
+@Repository
 public class ReplyJdbcRepository implements ResponseRepository {
 
     private final NamedParameterJdbcTemplate template;
@@ -42,7 +43,7 @@ public class ReplyJdbcRepository implements ResponseRepository {
 
     @Override
     public Optional<Response> findById(Long replyId) {
-        String sql = "SELECT reply_id, comment_id, member_id, content, created_at, updated_at, deleted_at FROM reply WHERE reply_id=:id";
+        String sql = "SELECT * FROM reply WHERE reply_id=:id";
         try {
             Map<String, Object> param = Map.of("id", replyId);
             Reply reply = template.queryForObject(sql, param, commentRowMapper());
@@ -54,16 +55,16 @@ public class ReplyJdbcRepository implements ResponseRepository {
     }
 
     @Override
-    public List<Response> findAll(ResponseSearchCond cond) {
+    public List<Response> findAll(ResponseDto cond) {
         return List.of();
     }
 
     @Override
-    public void update(Long replyId, ResponseUpdateDto dto) {
-        String sql = "UPDATE reply SET comment=:comment, updated_at=:updatedAt WHERE reply_id=:id";
+    public void update(Long replyId, ResponseDto dto) {
+        String sql = "UPDATE reply SET content=:content, updated_at=:updatedAt WHERE reply_id=:id";
         SqlParameterSource source = new MapSqlParameterSource()
                 .addValue("id", replyId)
-                .addValue("comment", dto.getContent())
+                .addValue("content", dto.getContent())
                 .addValue("updatedAt", new Timestamp(new Date().getTime()));
         template.update(sql, source);
     }
