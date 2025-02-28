@@ -1,7 +1,6 @@
 package com.colour.board.api.comment.repository;
 
-import com.colour.board.api.comment.domain.dto.ResponseSearchCond;
-import com.colour.board.api.comment.domain.dto.ResponseUpdateDto;
+import com.colour.board.api.comment.domain.dto.ResponseDto;
 import com.colour.board.api.comment.domain.entity.Response;
 import org.springframework.stereotype.Repository;
 
@@ -15,9 +14,9 @@ public interface ResponseRepository {
 
     Optional<Response> findById(Long responseId);
 
-    List<Response> findAll(ResponseSearchCond cond);
+    List<Response> findAll(ResponseDto cond);
 
-    void update(Long responseId, ResponseUpdateDto dto);
+    void update(Long responseId, ResponseDto dto);
 
     void delete(Long responseId);
 }

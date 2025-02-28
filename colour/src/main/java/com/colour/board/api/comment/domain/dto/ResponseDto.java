@@ -5,7 +5,7 @@ import lombok.Setter;
 
 @Getter
 @Setter
-public class ResponseRegisterDto {
+public class ResponseDto {
 
     private String content;
 }

@@ -1,20 +1,19 @@
 package com.colour.board.api.comment.service;
 
-import com.colour.board.api.comment.domain.dto.ResponseSearchCond;
-import com.colour.board.api.comment.domain.dto.ResponseUpdateDto;
+import com.colour.board.api.comment.domain.dto.ResponseDto;
 import com.colour.board.api.comment.domain.entity.Response;
 
 import java.util.List;
 
 public interface ResponseService {
 
-    Response save(Response response);
+    Response create(Response response);
 
     Response findResponseById(Long responseId);
 
-    List<Response> findAll(ResponseSearchCond cond);
+    List<Response> findAll(ResponseDto cond);
 
-    void update(Long memberId, Long responseId, ResponseUpdateDto dto);
+    void update(Long responseId, ResponseDto dto);
 
-    void delete(Long memberId, Long responseId);
+    void delete(Long responseId);
 }

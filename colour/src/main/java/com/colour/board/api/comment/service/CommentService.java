@@ -1,8 +1,6 @@
 package com.colour.board.api.comment.service;
 
-import com.colour.board.api.comment.domain.dto.ResponseSearchCond;
-import com.colour.board.api.comment.domain.dto.ResponseUpdateDto;
-import com.colour.board.api.comment.domain.entity.Comment;
+import com.colour.board.api.comment.domain.dto.ResponseDto;
 import com.colour.board.api.comment.domain.entity.Response;
 import com.colour.board.api.comment.repository.ResponseRepository;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -10,7 +8,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
-import java.util.Objects;
 
 @Service
 @Transactional
@@ -18,12 +15,12 @@ public class CommentService implements ResponseService {
 
     private final ResponseRepository repository;
 
-    public CommentService(@Qualifier("commentRepository") ResponseRepository repository) {
+    public CommentService(@Qualifier("commentJdbcRepository") ResponseRepository repository) {
         this.repository = repository;
     }
 
     @Override
-    public Response save(Response comment) {
+    public Response create(Response comment) {
         return repository.save(comment);
     }
 
@@ -33,26 +30,18 @@ public class CommentService implements ResponseService {
     }
 
     @Override
-    public List<Response> findAll(ResponseSearchCond cond) {
+    public List<Response> findAll(ResponseDto cond) {
         return List.of();
     }
 
     @Override
-    public void update(Long memberId, Long responseId, ResponseUpdateDto dto) {
-        if (doesWriterRequest(memberId, responseId)) {
-            repository.update(responseId, dto);
-        }
+    public void update(Long responseId, ResponseDto dto) {
+        repository.update(responseId, dto);
     }
 
     @Override
-    public void delete(Long memberId, Long responseId) {
-        if (doesWriterRequest(memberId, responseId)) {
-            repository.delete(responseId);
-        }
+    public void delete(Long responseId) {
+        repository.delete(responseId);
     }
 
-    private boolean doesWriterRequest(Long memberId, Long commentId) {
-        Response comment = findResponseById(commentId);
-        return Objects.equals(((Comment) comment).getMemberId(), memberId);
-    }
 }

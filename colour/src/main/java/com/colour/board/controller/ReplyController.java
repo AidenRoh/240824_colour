@@ -1,14 +1,13 @@
 package com.colour.board.controller;
 
-import com.colour.board.api.comment.domain.dto.ResponseRegisterDto;
-import com.colour.board.api.comment.domain.dto.ResponseUpdateDto;
+import com.colour.board.api.comment.domain.dto.ResponseDto;
 import com.colour.board.api.comment.domain.entity.Comment;
 import com.colour.board.api.comment.domain.entity.Reply;
 import com.colour.board.api.comment.service.ResponseService;
-import com.colour.member.service.MemberService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -21,7 +20,6 @@ import static com.colour.security.utils.SecurityUtils.getCurrentMemberId;
 public class ReplyController {
 
     private final ResponseService replyService;
-    private final MemberService memberService;
 
     @GetMapping("/create")
     public ResponseEntity<String> createReply() {
@@ -34,17 +32,18 @@ public class ReplyController {
     }
 
     @PostMapping("/{commentId}/create")
-    public ResponseEntity<String> createReply(@RequestBody ResponseRegisterDto dto,
+    public ResponseEntity<String> createReply(@RequestBody ResponseDto dto,
                                               @PathVariable Long commentId) {
         Reply reply = new Reply(commentId, getCurrentMemberId(), dto.getContent());
-        replyService.save(reply);
+        replyService.create(reply);
         return ResponseEntity.status(HttpStatus.CREATED).body("ok");
     }
 
     @PatchMapping("/{replyId}/update")
-    public ResponseEntity<String> updateReply(@RequestBody ResponseUpdateDto dto,
+    @PreAuthorize("@replyOwnerValidator.validateReplyOwner(#replyId)")
+    public ResponseEntity<String> updateReply(@RequestBody ResponseDto dto,
                                               @PathVariable Long replyId) {
-        replyService.update(getCurrentMemberId(), replyId, dto);
+        replyService.update(replyId, dto);
         return ResponseEntity.status(HttpStatus.OK).body("ok");
     }
 
@@ -55,8 +54,9 @@ public class ReplyController {
     }
 
     @DeleteMapping("/{replyId}/delete")
+    @PreAuthorize("@replyOwnerValidator.validateReplyOwner(#replyId)")
     public ResponseEntity<String> deleteComment(@PathVariable Long replyId) {
-        replyService.delete(getCurrentMemberId(), replyId);
+        replyService.delete(replyId);
         return ResponseEntity.status(HttpStatus.NO_CONTENT).body("reply-deleted");
     }
 }
