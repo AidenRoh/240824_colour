@@ -10,6 +10,7 @@ import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.jdbc.core.namedparam.SqlParameterSource;
 import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
+import org.springframework.stereotype.Repository;
 
 import javax.sql.DataSource;
 import java.sql.Timestamp;
@@ -25,6 +26,7 @@ import static org.springframework.util.StringUtils.hasText;
  * - Map
  * - BeanPropertyRowMapper
  */
+@Repository
 public class PostJdbcRepository implements PostRepository {
 
     private NamedParameterJdbcTemplate template;
