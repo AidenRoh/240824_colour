@@ -8,11 +8,13 @@ import org.springframework.jdbc.core.namedparam.BeanPropertySqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.jdbc.core.namedparam.SqlParameterSource;
 import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
+import org.springframework.stereotype.Repository;
 
 import javax.sql.DataSource;
 import java.util.Map;
 import java.util.Optional;
 
+@Repository
 public class HashtagJdbcRepository implements HashtagRepository {
 
     private final NamedParameterJdbcTemplate template;
@@ -34,10 +36,10 @@ public class HashtagJdbcRepository implements HashtagRepository {
     }
 
     @Override
-    public Hashtag tagUp(Long hashtagId) {
+    public void tagUp(Long hashtagId) {
         String sql = "UPDATE hashtag SET tag_frequency = hashtag.tag_frequency + 1 WHERE hashtag_id=:hashtagId";
         Map<String, Object> param = Map.of("hashtagId", hashtagId);
-        return template.queryForObject(sql, param, hashtagRowMapper());
+        template.update(sql, param);
     }
 
     @Override

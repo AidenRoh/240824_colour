@@ -22,7 +22,9 @@ public class HashtagServiceImpl implements HashtagService {
     public Hashtag createHashtag(Hashtag hashtag) {
         Hashtag tag = findByTag(hashtag.getHashtag());
         if (tag != null) {
-            return repository.tagUp(tag.getHashtagId());
+            repository.tagUp(tag.getHashtagId());
+            tag.setTagFrequency(tag.getTagFrequency() + 1);
+            return tag;
         } else return repository.save(hashtag);
     }
 
