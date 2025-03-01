@@ -5,7 +5,9 @@ import com.colour.board.api.likes.domain.entity.Likes;
 import com.colour.board.api.likes.service.LikesService;
 import com.colour.board.api.post.domain.dto.PostDto;
 import com.colour.board.api.post.domain.entity.Post;
+import com.colour.board.api.post.domain.entity.PostContent;
 import com.colour.board.api.post.domain.enums.PostStatus;
+import com.colour.board.api.post.service.PostContentService;
 import com.colour.board.api.post.service.PostService;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
@@ -16,10 +18,12 @@ import org.springframework.transaction.annotation.Transactional;
 public class BoardFacadeService {
 
     private final PostService postService;
+    private final PostContentService postContentService;
     private final LikesService likesService;
 
-    public BoardFacadeService(PostService postService, LikesService likesService) {
+    public BoardFacadeService(PostService postService, PostContentService postContentService, LikesService likesService) {
         this.postService = postService;
+        this.postContentService = postContentService;
         this.likesService = likesService;
     }
 
@@ -31,11 +35,13 @@ public class BoardFacadeService {
     @PreAuthorize("@postOwnerValidator.validatePostOwner(#postId)")
     public void createBoard(PostDto dto, Long postId) {
         dto.setStatus(PostStatus.POSTED.getStatus());
+        postContentService.createPostContent(new PostContent(postId, dto.getContent()));
         postService.updatePost(postId, dto);
     }
 
     @PreAuthorize("@postOwnerValidator.validatePostOwner(#postId)")
     public void updateBoard(PostDto dto, Long postId) {
+        postContentService.updatePostContent(postId, dto);
         postService.updatePost(postId, dto);
     }
 

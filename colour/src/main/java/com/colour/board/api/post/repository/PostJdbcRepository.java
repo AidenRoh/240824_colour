@@ -80,12 +80,6 @@ public class PostJdbcRepository implements PostRepository {
             prefix = ", ";
         }
 
-        if (hasText(dto.getContent())) {
-            sql.append(prefix).append("content=:content");
-            params.put("content", dto.getContent());
-            prefix = ", ";
-        }
-
         if (hasText(dto.getStatus())) {
             sql.append(prefix).append("status=:status");
             params.put("status", dto.getStatus());
