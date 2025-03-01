@@ -1,6 +1,6 @@
 package com.colour.session.repository;
 
-import com.colour.member.domain.dto.MemberRegisterDto;
+import com.colour.member.api.member.domain.dto.MemberRegisterDto;
 import com.colour.session.entity.EmailSession;
 import org.springframework.stereotype.Repository;
 

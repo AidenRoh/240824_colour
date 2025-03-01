@@ -1,10 +1,10 @@
 package com.colour.security.service;
 
-import com.colour.member.domain.MemberMapper;
-import com.colour.member.domain.dto.MemberSecurityContext;
-import com.colour.member.domain.dto.MemberSecurityDto;
-import com.colour.member.domain.entity.Member;
-import com.colour.member.repository.MemberRepository;
+import com.colour.member.api.member.domain.MemberMapper;
+import com.colour.member.api.member.domain.dto.MemberSecurityContext;
+import com.colour.member.api.member.domain.dto.MemberSecurityDto;
+import com.colour.member.api.member.domain.entity.Member;
+import com.colour.member.api.member.repository.MemberRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;

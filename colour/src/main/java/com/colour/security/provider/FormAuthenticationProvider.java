@@ -1,6 +1,6 @@
 package com.colour.security.provider;
 
-import com.colour.member.domain.dto.MemberSecurityContext;
+import com.colour.member.api.member.domain.dto.MemberSecurityContext;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.authentication.BadCredentialsException;

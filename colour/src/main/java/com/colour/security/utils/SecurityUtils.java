@@ -1,6 +1,6 @@
 package com.colour.security.utils;
 
-import com.colour.member.domain.dto.MemberSecurityDto;
+import com.colour.member.api.member.domain.dto.MemberSecurityDto;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;

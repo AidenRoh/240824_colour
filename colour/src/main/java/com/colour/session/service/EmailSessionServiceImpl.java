@@ -1,6 +1,6 @@
 package com.colour.session.service;
 
-import com.colour.member.domain.dto.MemberRegisterDto;
+import com.colour.member.api.member.domain.dto.MemberRegisterDto;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 

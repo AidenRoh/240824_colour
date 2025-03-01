@@ -1,9 +1,9 @@
 package com.colour.member.controller;
 
 import com.colour.mail.service.MailService;
-import com.colour.member.domain.dto.MemberRegisterDto;
-import com.colour.member.domain.dto.MemberUpdateDto;
-import com.colour.member.service.MemberService;
+import com.colour.member.api.member.domain.dto.MemberRegisterDto;
+import com.colour.member.api.member.domain.dto.MemberUpdateDto;
+import com.colour.member.api.member.service.MemberService;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
