@@ -8,5 +8,4 @@ import lombok.Setter;
 public class PostHashtagDto {
     private Long hashtagId;
     private Long postId;
-    private Long memberId;
 }

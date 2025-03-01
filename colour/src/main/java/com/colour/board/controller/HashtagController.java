@@ -8,8 +8,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import static com.colour.security.utils.SecurityUtils.getCurrentMemberId;
-
 @RestController
 @RequestMapping("/hashtag")
 @RequiredArgsConstructor
@@ -20,7 +18,7 @@ public class HashtagController {
     @PostMapping("/{postId}/create")
     public ResponseEntity<String> createHashtag(@ModelAttribute HashtagDto dto,
                                                 @PathVariable Long postId) {
-        service.createHashtag(dto, postId, getCurrentMemberId());
+        service.createHashtag(dto, postId);
         return new ResponseEntity<>(HttpStatus.OK);
     }
 

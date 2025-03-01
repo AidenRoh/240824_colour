@@ -46,10 +46,6 @@ public class PostHashtagJdbcRepository implements PostHashtagRepository {
             sql.append(" AND post_id = :postId");
             params.put("postId", postHashtagDto.getPostId());
         }
-        if (postHashtagDto.getMemberId() != null) {
-            sql.append(" AND member_id = :memberId");
-            params.put("memberId", postHashtagDto.getMemberId());
-        }
         return template.query(sql.toString(), params, tagPostRowMapper());
     }
 

@@ -23,12 +23,12 @@ public class HashtagFacadeService {
     }
 
     //hashtag
-    @PreAuthorize("@postOwnerValidator.validatePostOwner(#postId, #memberId)")
-    public void createHashtag(HashtagDto dto, long postId, long memberId) {
+    @PreAuthorize("@postOwnerValidator.validatePostOwner(#postId)")
+    public void createHashtag(HashtagDto dto, long postId) {
         Hashtag hashtag = hashtagService.createHashtag(new Hashtag(dto.getHashtag()));
         // prevent duplicated request
         if (!postHashtagService.isPostHashtagExist(postId, hashtag.getHashtagId())) {
-            postHashtagService.create(new PostHashtag(hashtag.getHashtagId(), postId, memberId));
+            postHashtagService.create(new PostHashtag(hashtag.getHashtagId(), postId));
         } else hashtagService.deleteHashtag(hashtag.getHashtagId());
         // TODO: 이미 등록된 태그입니다.
     }
