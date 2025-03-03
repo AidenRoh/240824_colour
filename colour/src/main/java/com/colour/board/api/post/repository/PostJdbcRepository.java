@@ -1,6 +1,6 @@
 package com.colour.board.api.post.repository;
 
-import com.colour.board.api.post.domain.dto.PostDto;
+import com.colour.board.api.post.domain.dto.PostRequestDto;
 import com.colour.board.api.post.domain.entity.Post;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
@@ -69,7 +69,7 @@ public class PostJdbcRepository implements PostRepository {
     }
 
     @Override
-    public void update(Long postId, PostDto dto) {
+    public void update(Long postId, PostRequestDto dto) {
         Map<String, Object> params = new HashMap<>();
         StringBuilder sql = new StringBuilder("UPDATE post SET ");
         String prefix = "";
@@ -86,14 +86,18 @@ public class PostJdbcRepository implements PostRepository {
             prefix = ", ";
         }
 
-        sql.append(prefix).append("updated_at=:updatedAt WHERE post_id=:postId");
+        if (!dto.isNewPost()) {
+            sql.append(prefix).append("updated_at=:updatedAt");
+            params.put("updatedAt", new Timestamp(new Date().getTime()));
+        }
+
+        sql.append(prefix).append(" WHERE post_id=:postId");
         params.put("postId", postId);
-        params.put("updatedAt", new Timestamp(new Date().getTime()));
         template.update(sql.toString(), params);
     }
 
     @Override
-    public void delete(Long postId, PostDto dto) {
+    public void delete(Long postId, PostRequestDto dto) {
         String sql = "UPDATE post SET status=:status, deleted_at=:deletedAt WHERE post_id=:id";
         SqlParameterSource param = new MapSqlParameterSource()
                 .addValue("id", postId)

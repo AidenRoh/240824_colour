@@ -1,6 +1,6 @@
 package com.colour.board.api.post.service;
 
-import com.colour.board.api.post.domain.dto.PostDto;
+import com.colour.board.api.post.domain.dto.PostRequestDto;
 import com.colour.board.api.post.domain.entity.Post;
 import com.colour.board.api.post.domain.enums.PostStatus;
 import com.colour.board.api.post.repository.PostRepository;
@@ -25,13 +25,13 @@ public class PostServiceImpl implements PostService {
     }
 
     @Override
-    public void updatePost(Long postId, PostDto dto) {
+    public void updatePost(Long postId, PostRequestDto dto) {
         repository.update(postId, dto);
     }
 
     @Override
     public void deletePost(Long postId) {
-        PostDto dto = new PostDto();
+        PostRequestDto dto = new PostRequestDto();
         dto.setStatus(PostStatus.DELETED.getStatus());
         repository.delete(postId, dto);
     }

@@ -1,6 +1,6 @@
 package com.colour.board.api.post.service;
 
-import com.colour.board.api.post.domain.dto.PostDto;
+import com.colour.board.api.post.domain.dto.PostRequestDto;
 import com.colour.board.api.post.domain.entity.PostContent;
 import com.colour.board.api.post.repository.PostContentRepository;
 import org.springframework.stereotype.Service;
@@ -22,7 +22,7 @@ public class PostContentServiceImpl implements PostContentService {
     }
 
     @Override
-    public void updatePostContent(Long post_id, PostDto postDto) {
+    public void updatePostContent(Long post_id, PostRequestDto postDto) {
         repository.update(post_id, postDto);
     }
 

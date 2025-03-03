@@ -1,6 +1,6 @@
 package com.colour.board.api.post.repository;
 
-import com.colour.board.api.post.domain.dto.PostDto;
+import com.colour.board.api.post.domain.dto.PostRequestDto;
 import com.colour.board.api.post.domain.entity.Post;
 import org.springframework.stereotype.Repository;
 
@@ -16,9 +16,9 @@ public interface PostRepository {
 
     List<Post> findByTitle(String title);
 
-    void update(Long postId, PostDto dto);
+    void update(Long postId, PostRequestDto dto);
 
-    void delete(Long postId, PostDto dto);
+    void delete(Long postId, PostRequestDto dto);
 
     void likePost(Long postId);
 

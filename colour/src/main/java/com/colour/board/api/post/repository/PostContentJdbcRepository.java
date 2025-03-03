@@ -1,6 +1,6 @@
 package com.colour.board.api.post.repository;
 
-import com.colour.board.api.post.domain.dto.PostDto;
+import com.colour.board.api.post.domain.dto.PostRequestDto;
 import com.colour.board.api.post.domain.entity.PostContent;
 import org.springframework.jdbc.core.namedparam.BeanPropertySqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
@@ -33,7 +33,7 @@ public class PostContentJdbcRepository implements PostContentRepository {
     }
 
     @Override
-    public void update(Long postId, PostDto postDto) {
+    public void update(Long postId, PostRequestDto postDto) {
         String sql = "UPDATE post_content SET content = :content WHERE post_id = :postId";
         Map<String, Object> param = Map.of("postId", postId, "content", postDto.getContent());
         template.update(sql, param);

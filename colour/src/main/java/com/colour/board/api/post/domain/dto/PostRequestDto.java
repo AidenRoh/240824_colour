@@ -5,9 +5,9 @@ import lombok.Setter;
 
 @Getter
 @Setter
-public class PostDto {
-
+public class PostRequestDto {
     private String title;
     private String content;
     private String status;
+    private boolean newPost;
 }
