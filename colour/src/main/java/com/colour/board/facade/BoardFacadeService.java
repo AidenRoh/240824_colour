@@ -3,7 +3,7 @@ package com.colour.board.facade;
 import com.colour.board.api.likes.domain.dto.LikesDto;
 import com.colour.board.api.likes.domain.entity.Likes;
 import com.colour.board.api.likes.service.LikesService;
-import com.colour.board.api.post.domain.dto.PostDto;
+import com.colour.board.api.post.domain.dto.PostRequestDto;
 import com.colour.board.api.post.domain.entity.Post;
 import com.colour.board.api.post.domain.entity.PostContent;
 import com.colour.board.api.post.domain.enums.PostStatus;
@@ -33,14 +33,15 @@ public class BoardFacadeService {
     }
 
     @PreAuthorize("@postOwnerValidator.validatePostOwner(#postId)")
-    public void createBoard(PostDto dto, Long postId) {
+    public void createBoard(PostRequestDto dto, Long postId) {
         dto.setStatus(PostStatus.POSTED.getStatus());
+        dto.setNewPost(true);
         postContentService.createPostContent(new PostContent(postId, dto.getContent()));
         postService.updatePost(postId, dto);
     }
 
     @PreAuthorize("@postOwnerValidator.validatePostOwner(#postId)")
-    public void updateBoard(PostDto dto, Long postId) {
+    public void updateBoard(PostRequestDto dto, Long postId) {
         postContentService.updatePostContent(postId, dto);
         postService.updatePost(postId, dto);
     }

@@ -1,7 +1,7 @@
 package com.colour.board.controller;
 
 import com.colour.board.api.likes.domain.dto.LikesDto;
-import com.colour.board.api.post.domain.dto.PostDto;
+import com.colour.board.api.post.domain.dto.PostRequestDto;
 import com.colour.board.api.post.domain.entity.Post;
 import com.colour.board.facade.BoardFacadeService;
 import jakarta.servlet.http.HttpServletRequest;
@@ -34,14 +34,14 @@ public class BoardController {
     }
 
     @PutMapping("/create")
-    public ResponseEntity<String> createBoard(@RequestBody PostDto dto, HttpServletRequest request) {
+    public ResponseEntity<String> createBoard(@RequestBody PostRequestDto dto, HttpServletRequest request) {
         Long postId = (Long) request.getSession().getAttribute("board");
         service.createBoard(dto, postId);
         return ResponseEntity.status(HttpStatus.CREATED).body("board created - done");
     }
 
     @PatchMapping("/{boardId}/update")
-    public ResponseEntity<String> updateBoard(@RequestBody PostDto dto, @PathVariable Long boardId) {
+    public ResponseEntity<String> updateBoard(@RequestBody PostRequestDto dto, @PathVariable Long boardId) {
         service.updateBoard(dto, boardId);
         return ResponseEntity.status(HttpStatus.OK).body("board updated - done");
     }
