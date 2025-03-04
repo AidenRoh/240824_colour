@@ -3,6 +3,7 @@ package com.colour.board.api.post.repository;
 import com.colour.board.api.post.domain.dto.PostRequestDto;
 import com.colour.board.api.post.domain.entity.PostContent;
 import org.springframework.jdbc.core.namedparam.BeanPropertySqlParameterSource;
+import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.jdbc.core.namedparam.SqlParameterSource;
 import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
@@ -34,9 +35,12 @@ public class PostContentJdbcRepository implements PostContentRepository {
 
     @Override
     public void update(Long postId, PostRequestDto postDto) {
-        String sql = "UPDATE post_content SET content = :content WHERE post_id = :postId";
-        Map<String, Object> param = Map.of("postId", postId, "content", postDto.getContent());
-        template.update(sql, param);
+        String sql = "UPDATE post_content SET content = :content, updated_at = :updatedAt WHERE post_id = :postId";
+        MapSqlParameterSource params = new MapSqlParameterSource()
+                .addValue("postId", postId)
+                .addValue("content", postDto.getContent())
+                .addValue("updated_at", postDto.getTimestamp());
+        template.update(sql, params);
     }
 
     @Override

@@ -13,8 +13,10 @@ import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.stereotype.Repository;
 
 import javax.sql.DataSource;
-import java.sql.Timestamp;
-import java.util.*;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
 
 import static org.springframework.util.StringUtils.hasText;
 
@@ -88,7 +90,7 @@ public class PostJdbcRepository implements PostRepository {
 
         if (!dto.isNewPost()) {
             sql.append(prefix).append("updated_at=:updatedAt");
-            params.put("updatedAt", new Timestamp(new Date().getTime()));
+            params.put("updatedAt", dto.getTimestamp());
         }
 
         sql.append(prefix).append(" WHERE post_id=:postId");
@@ -102,7 +104,7 @@ public class PostJdbcRepository implements PostRepository {
         SqlParameterSource param = new MapSqlParameterSource()
                 .addValue("id", postId)
                 .addValue("status", dto.getStatus())
-                .addValue("deletedAt", new Timestamp(new Date().getTime()));
+                .addValue("deletedAt", dto.getTimestamp());
         template.update(sql, param);
     }
 
