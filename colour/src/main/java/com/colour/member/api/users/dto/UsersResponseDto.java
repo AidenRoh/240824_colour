@@ -1,4 +1,4 @@
-package com.colour.member.api.mypage.dto;
+package com.colour.member.api.users.dto;
 
 import com.colour.board.api.colorpalette.domain.dto.ColorDto;
 import com.colour.board.api.hashtag.domain.dto.HashtagDto;
@@ -10,7 +10,7 @@ import java.util.List;
 
 @Getter
 @Setter
-public class MyPageResponseDto {
+public class UsersResponseDto {
     String username;
     Long followers;
     Long followees;
@@ -19,6 +19,6 @@ public class MyPageResponseDto {
     List<HashtagDto> hashtags;
     List<ColorDto> colors;
 
-    public MyPageResponseDto() {
+    public UsersResponseDto() {
     }
 }
