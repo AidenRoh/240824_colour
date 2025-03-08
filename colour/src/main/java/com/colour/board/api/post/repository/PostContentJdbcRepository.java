@@ -39,7 +39,7 @@ public class PostContentJdbcRepository implements PostContentRepository {
         MapSqlParameterSource params = new MapSqlParameterSource()
                 .addValue("postId", postId)
                 .addValue("content", postDto.getContent())
-                .addValue("updated_at", postDto.getTimestamp());
+                .addValue("updatedAt", postDto.getTimestamp());
         template.update(sql, params);
     }
 

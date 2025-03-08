@@ -93,7 +93,7 @@ public class PostJdbcRepository implements PostRepository {
             params.put("updatedAt", dto.getTimestamp());
         }
 
-        sql.append(prefix).append(" WHERE post_id=:postId");
+        sql.append(" WHERE post_id=:postId");
         params.put("postId", postId);
         template.update(sql.toString(), params);
     }
