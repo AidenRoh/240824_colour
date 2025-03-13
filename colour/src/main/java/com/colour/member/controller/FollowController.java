@@ -20,16 +20,18 @@ public class FollowController {
 
     @PostMapping("follow")
     public ResponseEntity<String> followMember(@RequestParam long followeeId) {
-        Long followerId = getCurrentMemberId();
-        FollowDto dto = FollowDto.builder().followerId(followerId).followeeId(followeeId).build();
+        FollowDto dto = new FollowDto();
+        dto.setFollowerId(getCurrentMemberId());
+        dto.setFolloweeId(followeeId);
         followService.followUser(dto);
         return ResponseEntity.status(HttpStatus.OK).build();
     }
 
     @DeleteMapping("unfollow")
     public ResponseEntity<String> unfollowMember(@RequestParam long followeeId) {
-        Long followerId = getCurrentMemberId();
-        FollowDto dto = FollowDto.builder().followerId(followerId).followeeId(followeeId).build();
+        FollowDto dto = new FollowDto();
+        dto.setFollowerId(getCurrentMemberId());
+        dto.setFolloweeId(followeeId);
         followService.unfollowUser(dto);
         return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
     }
