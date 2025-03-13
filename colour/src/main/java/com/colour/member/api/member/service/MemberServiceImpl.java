@@ -35,18 +35,23 @@ public class MemberServiceImpl implements MemberService {
     }
 
     @Override
-    public Member findMemberById(Long memberId) {
+    public Member findById(Long memberId) {
         return repository.findById(memberId).orElse(null);
+    }
+
+    @Override
+    public Member findByEmail(String email) {
+        return repository.findByEmail(email).orElse(null);
+    }
+
+    @Override
+    public Member findByUsername(String username) {
+        return repository.findByUsername(username).orElse(null);
     }
 
     @Override
     public List<Member> findAllMembersByCond(MemberSearchCond cond) {
         return List.of();
-    }
-
-    @Override
-    public Member findMemberByEmail(String email) {
-        return repository.findByEmail(email).orElse(null);
     }
 
     @Override

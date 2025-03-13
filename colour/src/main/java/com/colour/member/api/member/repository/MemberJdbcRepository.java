@@ -85,7 +85,7 @@ public class MemberJdbcRepository implements MemberRepository {
 
     @Override
     public Optional<Member> findById(Long memberId) {
-        String sql = "SELECT member_id, username, email, password FROM member WHERE member_id = :id";
+        String sql = "SELECT * FROM member WHERE member_id = :id";
         try {
             Map<String, Object> param = Map.of("id", memberId);
             Member member = template.queryForObject(sql, param, memberRowMapper());
@@ -99,8 +99,8 @@ public class MemberJdbcRepository implements MemberRepository {
     @Override
     public Optional<Member> findByEmail(String email) {
         String sql = "SELECT * FROM member WHERE email = :email";
-        Map<String, Object> param = Map.of("email", email);
         try {
+            Map<String, Object> param = Map.of("email", email);
             Member member = template.queryForObject(sql, param, memberRowMapper());
             assert member != null;
             return Optional.of(member);
@@ -108,6 +108,20 @@ public class MemberJdbcRepository implements MemberRepository {
             return Optional.empty();
         }
     }
+
+    @Override
+    public Optional<Member> findByUsername(String username) {
+        String sql = "SELECT * FROM member WHERE username = :username";
+        try {
+            Map<String, Object> param = Map.of("username", username);
+            Member member = template.queryForObject(sql, param, memberRowMapper());
+            assert member != null;
+            return Optional.of(member);
+        } catch (EmptyResultDataAccessException e) {
+            return Optional.empty();
+        }
+    }
+
 
     @Override
     public List<Member> findAll(MemberSearchCond cond) {

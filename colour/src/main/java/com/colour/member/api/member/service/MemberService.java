@@ -13,11 +13,13 @@ public interface MemberService {
 
     void updateMember(Long memberId, MemberUpdateDto dto);
 
-    Member findMemberById(Long memberId);
+    Member findById(Long memberId);
+
+    Member findByEmail(String email);
+
+    Member findByUsername(String username);
 
     List<Member> findAllMembersByCond(MemberSearchCond cond);
-
-    Member findMemberByEmail(String email);
 
     void deleteMember(Long memberId);
 
