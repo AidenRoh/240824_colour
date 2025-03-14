@@ -9,8 +9,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
-
 import static com.colour.security.utils.SecurityUtils.getCurrentMemberId;
 
 @RestController
@@ -44,11 +42,6 @@ public class CommentController {
                                                 @PathVariable Long commentId) {
         commentService.update(commentId, dto);
         return ResponseEntity.status(HttpStatus.OK).body("ok");
-    }
-
-    @GetMapping("/getComments")
-    public List<Comment> getComments() {
-        return List.of();
     }
 
     @DeleteMapping("/{commentId}/delete")

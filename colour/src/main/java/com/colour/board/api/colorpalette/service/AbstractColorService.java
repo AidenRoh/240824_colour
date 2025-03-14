@@ -1,6 +1,5 @@
 package com.colour.board.api.colorpalette.service;
 
-import com.colour.board.api.colorpalette.domain.dto.ColorCond;
 import com.colour.board.api.colorpalette.domain.dto.ColorDto;
 import com.colour.board.api.colorpalette.domain.entity.HexColor;
 import com.colour.board.api.colorpalette.util.Color12Sections;
@@ -8,7 +7,6 @@ import com.colour.board.api.colorpalette.util.Saturation;
 import com.colour.board.api.colorpalette.util.ZoneSystem;
 
 import java.awt.*;
-import java.util.List;
 import java.util.Locale;
 import java.util.Optional;
 
@@ -21,8 +19,6 @@ public abstract class AbstractColorService {
     public abstract HexColor createColor(HexColor color);
 
     public abstract Optional<HexColor> findColorByHex(String hexColor);
-
-    public abstract List<HexColor> findColorByCond(ColorCond colorCond);
 
     public abstract void deleteColor(Long colorId);
 

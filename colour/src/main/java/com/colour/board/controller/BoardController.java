@@ -66,10 +66,4 @@ public class BoardController {
         return ResponseEntity.status(HttpStatus.NO_CONTENT).body("unlike this post");
     }
 
-//    @GetMapping("/search")
-//    public String search(Long hashtagId) {
-//        service.findByHashtagId(hashtagId);
-//        return "search";
-//    }
-
 }

@@ -1,12 +1,10 @@
 package com.colour.board.api.colorpalette.service;
 
-import com.colour.board.api.colorpalette.domain.dto.ColorCond;
 import com.colour.board.api.colorpalette.domain.entity.HexColor;
 import com.colour.board.api.colorpalette.repository.ColorRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -28,11 +26,6 @@ public class ColorServiceImpl extends AbstractColorService {
     @Override
     public Optional<HexColor> findColorByHex(String hexColor) {
         return repository.findByHex(hexColor);
-    }
-
-    @Override
-    public List<HexColor> findColorByCond(ColorCond colorCond) {
-        return repository.findByCond(colorCond);
     }
 
     @Override

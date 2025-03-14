@@ -1,6 +1,5 @@
 package com.colour.board.api.colorpalette.repository;
 
-import com.colour.board.api.colorpalette.domain.dto.ColorCond;
 import com.colour.board.api.colorpalette.domain.entity.HexColor;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
@@ -12,8 +11,6 @@ import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.stereotype.Repository;
 
 import javax.sql.DataSource;
-import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
@@ -49,29 +46,6 @@ public class ColorJdbcRepository implements ColorRepository {
         } catch (EmptyResultDataAccessException e) {
             return Optional.empty();
         }
-    }
-
-    @Override
-    public List<HexColor> findByCond(ColorCond cond) {
-        Map<String, Object> params = new HashMap<>();
-        StringBuilder sql = new StringBuilder("SELECT * FROM color WHERE 1=1");
-
-        if (cond.getHue() != null) {
-            sql.append(" AND hue = :hue");
-            params.put("hue", cond.getHue());
-        }
-
-        if (cond.getSaturation() != null) {
-            sql.append(" AND saturation = :saturation");
-            params.put("saturation", cond.getSaturation());
-        }
-
-        if (cond.getLightness() != null) {
-            sql.append(" AND lightness = :lightness");
-            params.put("lightness", cond.getLightness());
-        }
-
-        return template.query(sql.toString(), params, hexColorRowMapper());
     }
 
     @Override
