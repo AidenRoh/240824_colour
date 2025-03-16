@@ -1,7 +1,6 @@
 package com.colour.board.controller;
 
 import com.colour.board.api.comment.domain.dto.ResponseDto;
-import com.colour.board.api.comment.domain.entity.Comment;
 import com.colour.board.api.comment.domain.entity.Reply;
 import com.colour.board.api.comment.service.ResponseService;
 import lombok.RequiredArgsConstructor;
@@ -9,8 +8,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
 
 import static com.colour.security.utils.SecurityUtils.getCurrentMemberId;
 
@@ -45,12 +42,6 @@ public class ReplyController {
                                               @PathVariable Long replyId) {
         replyService.update(replyId, dto);
         return ResponseEntity.status(HttpStatus.OK).body("ok");
-    }
-
-    //TODO: Search Logic needs to be revised
-    @GetMapping("/get_comments")
-    public List<Comment> getReplies() {
-        return List.of();
     }
 
     @DeleteMapping("/{replyId}/delete")

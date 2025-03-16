@@ -6,8 +6,8 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 @SpringBootApplication
 public class ColourApplication {
 
-	public static void main(String[] args) {
-		SpringApplication.run(ColourApplication.class, args);
-	}
+    public static void main(String[] args) {
+        SpringApplication.run(ColourApplication.class, args);
+    }
 
 }

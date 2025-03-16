@@ -35,16 +35,16 @@ public class UsersController {
     }
 
     @GetMapping("/{username}")
-    public ResponseEntity<UsersResponseDto> getUserPage(@PathVariable String username, Pageable pageable) {
+    public ResponseEntity<UsersResponseDto> getUserSummaryPage(@PathVariable String username, Pageable pageable) {
         Member user = memberService.findByUsername(username);
         return ResponseEntity.status(HttpStatus.OK).body(service.getSummary(user.getMemberId(), pageable));
     }
 
     @GetMapping(value = "/{username}", params = "tab")
-    public ResponseEntity<Page<? extends Responsible>> getUserPage(@PathVariable String username,
-                                                                   @RequestParam String tab,
-                                                                   @RequestParam(required = false) String sort,
-                                                                   Pageable pageable) {
+    public ResponseEntity<Page<? extends Responsible>> getUserSummaryPage(@PathVariable String username,
+                                                                          @RequestParam String tab,
+                                                                          @RequestParam(required = false) String sort,
+                                                                          Pageable pageable) {
         Member user = memberService.findByUsername(username);
         Pageable sortPageable = PageRequest.of(pageable.getPageNumber(), pageable.getPageSize(), SortOption.getSort(sort));
         Page<? extends Responsible> result = Tab.getTab(tab).execute(service, user.getMemberId(), sortPageable);
@@ -99,6 +99,7 @@ public class UsersController {
             for (SortOption option : values()) {
                 if (option.field.equals(value)) return Sort.by(option.direction, option.field);
             }
+            //default value
             return Sort.by(LATEST.direction, LATEST.field);
         }
     }
