@@ -10,7 +10,7 @@ import java.util.List;
 
 @Getter
 @Setter
-public class UsersResponseDto {
+public class UsersResponseDto implements Responsible {
     String username;
     Long followers;
     Long followees;
