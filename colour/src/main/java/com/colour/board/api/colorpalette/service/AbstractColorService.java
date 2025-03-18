@@ -1,6 +1,6 @@
 package com.colour.board.api.colorpalette.service;
 
-import com.colour.board.api.colorpalette.domain.dto.ColorDto;
+import com.colour.board.api.colorpalette.domain.dto.ColorCond;
 import com.colour.board.api.colorpalette.domain.entity.HexColor;
 import com.colour.board.api.colorpalette.util.Color12Sections;
 import com.colour.board.api.colorpalette.util.Saturation;
@@ -22,8 +22,8 @@ public abstract class AbstractColorService {
 
     public abstract void deleteColor(Long colorId);
 
-    public static HexColor of(ColorDto colorDto) {
-        String hexKey = colorDto.getHexColor().toUpperCase(Locale.ROOT);
+    public static HexColor of(String value) {
+        String hexKey = value.toUpperCase(Locale.ROOT);
         Color hexColor = Color.decode(hexKey);
         float[] hsb = Color.RGBtoHSB(hexColor.getRed(), hexColor.getGreen(), hexColor.getBlue(), null);
         return new HexColor(hexKey,
@@ -31,6 +31,17 @@ public abstract class AbstractColorService {
                 Saturation.classify(getSaturation(hsb)),
                 ZoneSystem.classify(getLuminance(hexColor))
         );
+    }
+
+    public static ColorCond getColorCond(String value) {
+        ColorCond colorCond = new ColorCond();
+        String hexKey = value.toUpperCase(Locale.ROOT);
+        Color hexColor = Color.decode(hexKey);
+        float[] hsb = Color.RGBtoHSB(hexColor.getRed(), hexColor.getGreen(), hexColor.getBlue(), null);
+        colorCond.setHue(Color12Sections.classify(getHue(hsb)));
+        colorCond.setSaturation(Saturation.classify(getSaturation(hsb)));
+        colorCond.setLightness(ZoneSystem.classify(getLuminance(hexColor)));
+        return colorCond;
     }
 
     private static int getHue(float[] hsb) {
