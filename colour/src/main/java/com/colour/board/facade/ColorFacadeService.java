@@ -24,7 +24,7 @@ public class ColorFacadeService {
 
     @PreAuthorize("@postOwnerValidator.validatePostOwner(#postId)")
     public HexColor createColor(ColorDto dto, Long postId) {
-        HexColor color = colorService.createColor(AbstractColorService.of(dto));
+        HexColor color = colorService.createColor(AbstractColorService.of(dto.getHexColor()));
         //prevent duplicated request
         if (!postColorService.isPostColorExist(postId, color.getColorId())) {
             postColorService.create(new PostColor(postId, color.getColorId()));
