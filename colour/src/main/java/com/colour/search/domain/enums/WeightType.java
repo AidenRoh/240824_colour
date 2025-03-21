@@ -1,4 +1,4 @@
-package com.colour.board.api.search.domain.enums;
+package com.colour.search.domain.enums;
 
 import lombok.Getter;
 

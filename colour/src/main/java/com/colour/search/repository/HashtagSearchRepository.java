@@ -1,4 +1,4 @@
-package com.colour.board.api.search.repository;
+package com.colour.search.repository;
 
 import com.colour.board.api.hashtag.domain.dto.HashtagDto;
 import org.springframework.jdbc.core.JdbcTemplate;

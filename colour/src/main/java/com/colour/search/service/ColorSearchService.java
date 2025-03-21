@@ -1,7 +1,7 @@
-package com.colour.board.api.search.service;
+package com.colour.search.service;
 
 import com.colour.board.api.colorpalette.domain.dto.ColorCond;
-import com.colour.board.api.search.repository.ColorSearchRepository;
+import com.colour.search.repository.ColorSearchRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 

@@ -1,7 +1,7 @@
-package com.colour.board.api.search.service;
+package com.colour.search.service;
 
 import com.colour.board.api.hashtag.domain.dto.HashtagDto;
-import com.colour.board.api.search.repository.HashtagSearchRepository;
+import com.colour.search.repository.HashtagSearchRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 

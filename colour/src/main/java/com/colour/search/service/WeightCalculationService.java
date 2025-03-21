@@ -1,6 +1,6 @@
-package com.colour.board.api.search.service;
+package com.colour.search.service;
 
-import com.colour.board.api.search.domain.enums.WeightType;
+import com.colour.search.domain.enums.WeightType;
 import org.springframework.stereotype.Service;
 
 import java.util.HashMap;

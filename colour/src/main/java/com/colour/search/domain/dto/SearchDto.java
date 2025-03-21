@@ -1,4 +1,4 @@
-package com.colour.board.api.search.domain.dto;
+package com.colour.search.domain.dto;
 
 import com.colour.board.api.colorpalette.domain.dto.ColorCond;
 import com.colour.board.api.hashtag.domain.dto.HashtagDto;
