@@ -5,12 +5,12 @@ import com.colour.member.api.member.service.MemberService;
 import com.colour.member.api.users.dto.Responsible;
 import com.colour.member.api.users.dto.UsersResponseDto;
 import com.colour.member.api.users.service.UsersService;
+import com.colour.search.domain.enums.SortOption;
 import lombok.AllArgsConstructor;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -18,6 +18,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.net.URI;
 
+import static com.colour.search.domain.enums.SortOption.LATEST;
 import static com.colour.security.utils.SecurityUtils.getCurrentMemberId;
 
 
@@ -45,8 +46,10 @@ public class UsersController {
                                                                           @RequestParam String tab,
                                                                           @RequestParam(required = false) String sort,
                                                                           Pageable pageable) {
+        Pageable sortPageable = PageRequest.of(pageable.getPageNumber(), pageable.getPageSize(),
+                SortOption.getSort((sort != null) ? sort : LATEST.name()));
+
         Member user = memberService.findByUsername(username);
-        Pageable sortPageable = PageRequest.of(pageable.getPageNumber(), pageable.getPageSize(), SortOption.getSort(sort));
         Page<? extends Responsible> result = Tab.getTab(tab).execute(service, user.getMemberId(), sortPageable);
         if (result.equals(Page.empty())) {
             HttpHeaders headers = new HttpHeaders();
@@ -82,25 +85,6 @@ public class UsersController {
         @FunctionalInterface
         public interface TabFunction {
             Page<? extends Responsible> apply(UsersService service, Long memberId, Pageable pageable);
-        }
-    }
-
-    @AllArgsConstructor
-    private enum SortOption {
-        LATEST("created_at", Sort.Direction.DESC),
-        EARLIEST("created_at", Sort.Direction.ASC),
-        VIEWS("views", Sort.Direction.DESC),
-        POPULAR("likes", Sort.Direction.DESC);
-
-        private final String field;
-        private final Sort.Direction direction;
-
-        public static Sort getSort(String value) {
-            for (SortOption option : values()) {
-                if (option.field.equals(value)) return Sort.by(option.direction, option.field);
-            }
-            //default value
-            return Sort.by(LATEST.direction, LATEST.field);
         }
     }
 
