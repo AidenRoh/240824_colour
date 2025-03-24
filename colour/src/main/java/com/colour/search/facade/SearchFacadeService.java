@@ -71,7 +71,7 @@ public class SearchFacadeService {
                 .map(Map.Entry::getKey)
                 .toList();
         AtomicLong totalCount = new AtomicLong(searchFinalList.size());
-        return postResponseService.createResponse(searchFinalList, pageable, totalCount.get());
+        return postResponseService.createFilterResponse(searchFinalList, pageable, totalCount.get());
     }
 
     private Map<Long, Double> asyncSearchAndUnion(List<ColorCond> colorFilters, List<HashtagDto> hashtagFilters,

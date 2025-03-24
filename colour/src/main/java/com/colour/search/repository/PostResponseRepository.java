@@ -3,7 +3,7 @@ package com.colour.search.repository;
 import com.colour.board.api.colorpalette.domain.dto.ColorDto;
 import com.colour.board.api.hashtag.domain.dto.HashtagDto;
 import com.colour.board.api.post.domain.dto.PostResponseDto;
-import com.colour.utils.StringConverter;
+import com.colour.utils.StringManipulator;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
@@ -44,7 +44,7 @@ public class PostResponseRepository {
                 FROM post p
                 WHERE p.post_id IN (:postIds) AND p.status = 'POSTED'
                 ORDER BY %s LIMIT :limit OFFSET :offset
-                """, isRelevance(pageable) ? relevanceOrderString : "p." + StringConverter.getSortString(pageable));
+                """, isRelevance(pageable) ? relevanceOrderString : "p." + StringManipulator.buildOrderByClause(pageable));
 
 
         return template.query(sql, params, postResponseDtoRowMapper());
@@ -66,7 +66,7 @@ public class PostResponseRepository {
                 JOIN post p ON pc.post_id = p.post_id
                 WHERE p.post_id IN (:postIds)
                 ORDER BY %s LIMIT :limit OFFSET :offset
-                """, isRelevance(pageable) ? "NULL" : "p." + StringConverter.getSortString(pageable));
+                """, isRelevance(pageable) ? "NULL" : "p." + StringManipulator.buildOrderByClause(pageable));
 
         return template.query(sql, params, rs -> {
             Map<Long, List<ColorDto>> colorMap = new HashMap<>();
@@ -97,7 +97,7 @@ public class PostResponseRepository {
                 JOIN post p ON ph.post_id = p.post_id
                 WHERE p.post_id IN (:postIds)
                 ORDER BY %s LIMIT :limit OFFSET :offset
-                """, isRelevance(pageable) ? "NULL" : "p." + StringConverter.getSortString(pageable));
+                """, isRelevance(pageable) ? "NULL" : "p." + StringManipulator.buildOrderByClause(pageable));
 
         return template.query(sql, params, rs -> {
             Map<Long, List<HashtagDto>> hashtagMap = new HashMap<>();

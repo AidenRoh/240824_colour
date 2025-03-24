@@ -14,10 +14,9 @@ import java.util.List;
 public class PostResponseDto implements Responsible {
     Long postId;
     String title;
-    Long views;
     Long likes;
     Timestamp createdAt;
-    Timestamp updatedAt;
+    Long views;
     List<HashtagDto> hashtags;
     List<ColorDto> colors;
 }
