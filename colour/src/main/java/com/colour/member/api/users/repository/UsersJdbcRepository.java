@@ -5,7 +5,7 @@ import com.colour.board.api.hashtag.domain.dto.HashtagDto;
 import com.colour.board.api.post.domain.dto.PostResponseDto;
 import com.colour.member.api.follow.domain.dto.FollowDto;
 import com.colour.member.api.users.dto.UsersResponseDto;
-import com.colour.utils.StringConverter;
+import com.colour.utils.StringManipulator;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
@@ -96,7 +96,7 @@ public class UsersJdbcRepository implements UsersRepository {
                 FROM post WHERE member_id = :memberId
                 ORDER BY %s
                 LIMIT :limit OFFSET :offset
-                """, StringConverter.getSortString(pageable));
+                """, StringManipulator.buildOrderByClause(pageable));
         MapSqlParameterSource params = new MapSqlParameterSource()
                 .addValue("memberId", memberId)
                 .addValue("limit", pageable.getPageSize())
