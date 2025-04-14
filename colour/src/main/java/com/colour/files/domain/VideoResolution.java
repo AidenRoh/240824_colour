@@ -19,7 +19,7 @@ public record VideoResolution(int width, int height) {
             new String[]{"854", "480"}
     );
 
-    public List<String[]> getMaximumResolution() {
+    public List<String[]> getValidResolutions() {
         int resolution = width * height;
         List<String[]> result = new ArrayList<>();
         for (int i = 0; i < RESOLUTION_VALUES.size(); i++) {
