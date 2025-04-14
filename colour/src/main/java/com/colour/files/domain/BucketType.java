@@ -5,7 +5,9 @@ import lombok.Getter;
 public enum BucketType {
     IMAGE("colour_image", new String[]{"jpg", "jpeg", "png", "gif"}),
     VIDEO("colour_video", new String[]{"mp4", "mov", "mkv", "avi"}),
-    THUMBNAIL("colour_thumbnail", new String[]{"thumb"});
+    THUMBNAIL("colour_thumbnail", new String[]{"thumb"}),
+    TRANSCODE("colour_transcode", new String[]{"transcode"}),
+    ;
 
     @Getter
     private final String bucket;
