@@ -41,6 +41,18 @@ public class MinIoRepository {
         );
     }
 
+    public void uploadTranscodedFootage(String filePath, InputStream inputStream, Path transcodedFootagePath)
+            throws InsufficientDataException, IOException, NoSuchAlgorithmException, InvalidKeyException, XmlParserException, InternalException {
+        client.putObject(
+                PutObjectArgs.builder()
+                        .bucket(BucketType.TRANSCODE.getBucket())
+                        .object(filePath)
+                        .stream(inputStream, transcodedFootagePath.toFile().length(), -1)
+                        .contentType("")
+                        .build()
+        );
+    }
+
     public String IssuePresignedUrl(String fileName, String fileType, Method method) {
         String targetBucket = BucketType.getValidBucket(fileType);
         try {
@@ -118,11 +130,11 @@ public class MinIoRepository {
 
     public CompletableFuture<Void> initializeTranscodingBucket() {
         try {
-            return client.bucketExists(BucketExistsArgs.builder().bucket("colour_transcoding").build())
+            return client.bucketExists(BucketExistsArgs.builder().bucket("colour_transcode").build())
                     .thenCompose(exists -> {
                         if (!exists) {
                             try {
-                                return client.makeBucket(MakeBucketArgs.builder().bucket("colour_transcoding").build());
+                                return client.makeBucket(MakeBucketArgs.builder().bucket("colour_transcode").build());
                             } catch (Exception e) {
                                 return CompletableFuture.failedFuture(e);
                             }
