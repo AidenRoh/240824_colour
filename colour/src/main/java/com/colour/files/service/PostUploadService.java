@@ -8,11 +8,18 @@ import jakarta.annotation.PreDestroy;
 import java.io.*;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+import java.util.concurrent.Future;
+import java.util.stream.Stream;
 
 import static com.colour.files.domain.BucketType.VIDEO;
 import static com.colour.files.domain.BucketType.getValidBucket;
+import static com.colour.security.utils.SecurityUtils.getCurrentMemberId;
 
 public class PostUploadService {
 
@@ -33,19 +40,77 @@ public class PostUploadService {
         });
     }
 
-    public void proceedTranscode(String filePath, String fileType) {
+    public void proceedTranscode(String minioPath, String fileType, VideoResolution resolution) throws ExecutionException, InterruptedException {
+        repository.initializeTranscodingBucket();
         if (getValidBucket(fileType).equals(VIDEO.getBucket())) {
-            executor.submit(() -> {
+            String presignedUrl = repository.IssuePresignedUrl(minioPath, fileType, Method.GET);
+            List<String[]> targetResolutions = resolution.getValidResolutions();
+            List<Future<String>> consumers = new ArrayList<>();
 
-            });
+            for (String[] each : targetResolutions) {
+                consumers.add(executor.submit(() -> {
+                    try {
+                        String width = each[0];
+                        String height = each[1];
+                        String resDir = "./transcoded/" + getCurrentMemberId() + "/" + height;
+
+                        new File(resDir).mkdirs();
+
+                        List<String> command = List.of(
+                                "ffmpeg",
+                                "-i", presignedUrl,
+                                "-vf", "scale=" + width + ":" + height,
+                                "-c:a", "aac",
+                                "-ar", "48000",
+                                "-b:a", "128k",
+                                "-c:v", "h264",
+                                "-profile:v", "main",
+                                "-crf", "20",
+                                "-sc_threshold", "0",
+                                "-g", "48",
+                                "-keyint_min", "48",
+                                "-hls_time", "6",
+                                "-hls_playlist_type", "vod",
+                                "-f", "hls",
+                                resDir + "/index.m3u8"
+                        );
+                        ProcessBuilder builder = new ProcessBuilder(command);
+                        builder.inheritIO();
+                        Process process = builder.start();
+                        process.waitFor();
+                        return resDir;
+                    } catch (IOException | InterruptedException e) {
+                        throw new RuntimeException(e);
+                    }
+                }));
+            }
+            saveTranscodingFootage(consumers);
         }
     }
 
     // metadata extraction
-    private void saveTranscodingFootage(String minioPath, VideoResolution resolution) {
-        repository.initializeTranscodingBucket();
+    private void saveTranscodingFootage(List<Future<String>> consumers) throws ExecutionException, InterruptedException {
+        Path baseDir = Paths.get("transcoded");
 
+        for (Future<String> each : consumers) {
+            Path resolutionDir = Path.of(each.get());
 
+            try (Stream<Path> files = Files.walk(resolutionDir)) {
+                files
+                        .filter(Files::isRegularFile)
+                        .forEach(file -> {
+                            Path relative = baseDir.relativize(file);
+                            String filePath = relative.toString().replace("\\", "/");
+                            try (InputStream is = new FileInputStream(file.toFile())) {
+                                repository.uploadTranscodedFootage(filePath, is, file);
+                            } catch (Exception e) {
+                                throw new RuntimeException(e);
+                            }
+                        });
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
+        }
     }
 
     // thumbnail creation
@@ -70,7 +135,7 @@ public class PostUploadService {
         try (InputStream is = new FileInputStream(thumbnailPath.toFile())) {
             repository.uploadThumbnail(minioPath, is, thumbnailPath);
         } catch (Exception e) {
-            throw new RuntimeException(e.getCause());
+            throw new RuntimeException(e);
         } finally {
             Files.deleteIfExists(thumbnailPath);
         }
