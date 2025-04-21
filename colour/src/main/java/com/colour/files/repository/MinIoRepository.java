@@ -48,9 +48,13 @@ public class MinIoRepository {
                         .bucket(BucketType.TRANSCODE.getBucket())
                         .object(filePath)
                         .stream(inputStream, transcodedFootagePath.toFile().length(), -1)
-                        .contentType("")
+                        .contentType(setMediaType())
                         .build()
         );
+    }
+
+    private String setMediaType() {
+        return ""; //TODO:
     }
 
     public String IssuePresignedUrl(String fileName, String fileType, Method method) {
