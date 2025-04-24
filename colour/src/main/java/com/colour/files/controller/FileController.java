@@ -2,6 +2,7 @@ package com.colour.files.controller;
 
 import com.colour.files.domain.dto.UploadNotifyRequest;
 import com.colour.files.service.FileUploadService;
+import com.colour.files.service.PostUploadService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -9,11 +10,13 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping("/file")
 public class FileController {
 
-    FileUploadService service;
+    FileUploadService fileUploadService;
+    PostUploadService postUploadService;
+
 
     @GetMapping("uploadFile")
     public ResponseEntity<String> uploadFile(@RequestParam String fileName) {
-        String issuedUrl = service.getPresignedUrl(fileName, getFileType(fileName));
+        String issuedUrl = fileUploadService.getPresignedUrl(fileName, getFileType(fileName));
         return ResponseEntity.ok(issuedUrl);
     }
 
@@ -24,6 +27,7 @@ public class FileController {
         return ResponseEntity.ok("successfully uploaded");
 
     }
+
 
     private String getFileType(String fileName) {
         return fileName.substring(fileName.lastIndexOf(".") + 1);
