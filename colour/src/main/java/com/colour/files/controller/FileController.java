@@ -24,6 +24,7 @@ public class FileController {
     public ResponseEntity<String> notifyCompletion(@RequestBody UploadNotifyRequest uploadNotifyRequest,
                                                    @RequestParam(required = false) Integer thumbnailTime) {
         //TODO: post db 에 파일 링크 저장 / 썸네일 생성 /
+        postUploadService.proceedThumbnailUpload();
         return ResponseEntity.ok("successfully uploaded");
 
     }
