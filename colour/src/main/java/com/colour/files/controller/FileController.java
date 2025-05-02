@@ -25,8 +25,9 @@ public class FileController {
                                                    @RequestParam(required = false) Integer thumbnailTime) {
         //TODO: post db 에 파일 링크 저장 / 썸네일 생성 /
         String a = uploadNotifyRequest.getBucket();
-        String b = uploadNotifyRequest.getObject()
-        postUploadService.proceedThumbnailUpload(a,b,thumbnailTime);
+        String b = uploadNotifyRequest.getObject();
+        postUploadService.proceedThumbnailUpload(a, b, thumbnailTime);
+        postUploadService.destroy();
         return ResponseEntity.ok("successfully uploaded");
 
     }
