@@ -1,5 +1,6 @@
 package com.colour.files.controller;
 
+import com.colour.files.domain.VideoResolution;
 import com.colour.files.domain.dto.UploadNotifyRequest;
 import com.colour.files.service.FileUploadService;
 import com.colour.files.service.PostUploadService;
@@ -28,6 +29,7 @@ public class FileController {
         String b = uploadNotifyRequest.getObject();
         postUploadService.proceedThumbnailUpload(a, b, thumbnailTime);
         postUploadService.destroy();
+        postUploadService.proceedTranscode(a, b, new VideoResolution(368, 480));
         return ResponseEntity.ok("successfully uploaded");
 
     }
